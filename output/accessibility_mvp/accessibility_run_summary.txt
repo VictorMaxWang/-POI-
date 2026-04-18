@@ -1,0 +1,6 @@
+Accessibility MVP run summary
+input=output/accessibility_mvp/od_matrix_walk_15m.csv
+threshold_min=15
+point_rows=0
+city_rows=0
+

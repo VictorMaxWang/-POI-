@@ -1,0 +1,9 @@
+﻿record_id,city,nursery_id,institution_name_std,address_std,exclude_reason,geo_status,review_status,geocode_level,lng_gcj02,lat_gcj02
+exs_92ea9622100c,南京,nursery_0e72a40c7225,南京市秦淮区胭脂巷幼儿园托班,南京市秦淮区荷花塘12号,GEOCODE_NO_RESULT,READY_FOR_GEOCODE,READY_FOR_GEOCODE,NO_RESULT,,
+exs_0273294adcad,南京,nursery_399ddb0acf28,南京市府西街小学附属幼儿园,秦淮区秣陵路16号,GEOCODE_NO_RESULT,READY_FOR_GEOCODE,READY_FOR_GEOCODE,NO_RESULT,,
+exs_0fe50d3b7ef8,南京,nursery_a3fa3042333c,南京市秦淮区常府幼儿园,南京市秦淮区街398号,GEOCODE_NO_RESULT,READY_FOR_GEOCODE,READY_FOR_GEOCODE,NO_RESULT,,
+exs_c44f96db5cb9,南京,nursery_aa61856a8da5,南京市朝天宫幼儿园托班,南京市秦淮区韩家苑15-1号,GEOCODE_NO_RESULT,READY_FOR_GEOCODE,READY_FOR_GEOCODE,NO_RESULT,,
+exs_efad1c19d7b8,南京,nursery_c0eb39b1466f,南京美儿乐婴幼儿保育服务有限公司,南京市秦淮区象房村路50号-1,GEOCODE_NO_RESULT,READY_FOR_GEOCODE,READY_FOR_GEOCODE,NO_RESULT,,
+exs_05866f0e0cfc,南京,nursery_c27c1c6c275e,中国人民解放军陆军工程大学海福巷幼儿园,南京市秦淮区海福巷1号,GEOCODE_NO_RESULT,READY_FOR_GEOCODE,READY_FOR_GEOCODE,NO_RESULT,,
+exs_5569b0eaa1a2,南通,nursery_789eca02702e,海安高新区孙庄幼儿园,,MISSING_GEO_RECORD,BLOCKED_ADDRESS_MISSING,REVIEW_REQUIRED,,,
+exs_1cc6ad6885be,苏州,nursery_65e41798ade9,张家港市海港幼儿园,张家港市金港街道海南路3号,GEOCODE_NO_RESULT,READY_FOR_GEOCODE,READY_FOR_GEOCODE,NO_RESULT,,
