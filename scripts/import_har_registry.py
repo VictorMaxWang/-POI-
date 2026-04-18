@@ -4,6 +4,7 @@ import argparse
 import base64
 import json
 from pathlib import Path
+import urllib.parse
 
 from normalize_registry_evidence import (
     build_derived_source_id,
@@ -25,6 +26,7 @@ from pipeline_common import (
 
 
 OUTPUT_FIELDS = schema_fieldnames("manual_capture_template.csv")
+EXPECTED_ENDPOINT = "/daycare/szMenuOption/getHomeList"
 
 
 def resolve_path(raw_path: str) -> Path:
@@ -57,6 +59,31 @@ def decode_har_content(content: dict[str, object]) -> str:
         except Exception:
             return ""
     return text
+
+
+def append_reason(row: dict[str, str], reason: str) -> None:
+    reason = reason.strip()
+    if not reason:
+        return
+    parts = [part.strip() for part in row.get("remark", "").split("|") if part.strip()]
+    if reason not in parts:
+        parts.append(reason)
+    row["remark"] = " | ".join(parts)
+
+
+def response_size(content: dict[str, object]) -> int:
+    try:
+        return int(content.get("size", 0) or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def build_candidate_urls(candidates: list[str], expected_present: bool) -> list[str]:
+    ordered = []
+    if not expected_present:
+        ordered.append(f"missing_expected_endpoint={EXPECTED_ENDPOINT}")
+    ordered.extend(candidates[:8])
+    return ordered
 
 
 def update_manual_rows(updated_rows: list[dict[str, str]]) -> None:
@@ -100,6 +127,10 @@ def main() -> None:
         normalized_rows = []
         largest_html = ""
         largest_html_url = ""
+        evidence_host = urllib.parse.urlparse(row.get("evidence_url_final", "")).netloc
+        candidate_json_urls: list[str] = []
+        expected_endpoint_present = False
+        incomplete_payload_detected = False
         for entry in entries:
             request = entry.get("request", {})
             response = entry.get("response", {})
@@ -109,6 +140,16 @@ def main() -> None:
             mime_type = str(content.get("mimeType", "")).lower()
             if not request_url.startswith("http") or status != "200":
                 continue
+            request_host = urllib.parse.urlparse(request_url).netloc
+            same_origin = not evidence_host or request_host == evidence_host
+            is_candidate_json = same_origin and ("json" in mime_type) and any(marker in request_url for marker in ("/daycare/", "/jeecg-boot/"))
+            if is_candidate_json and request_url not in candidate_json_urls:
+                candidate_json_urls.append(request_url)
+            if EXPECTED_ENDPOINT in request_url:
+                expected_endpoint_present = True
+            raw_text = content.get("text")
+            if is_candidate_json and response_size(content) > 0 and (not isinstance(raw_text, str) or not raw_text.strip()):
+                incomplete_payload_detected = True
             content_text = decode_har_content(content)
             if not content_text:
                 continue
@@ -172,7 +213,12 @@ def main() -> None:
             row["import_status"] = "IMPORTED"
         else:
             row["import_status"] = "FAILED"
-            row["remark"] = f"{row.get('remark', '')} | no_registry_payload_in_har".strip(" |")
+            if incomplete_payload_detected:
+                append_reason(row, "incomplete_har_payload")
+            else:
+                append_reason(row, "no_registry_payload_in_har")
+            for candidate in build_candidate_urls(candidate_json_urls, expected_endpoint_present):
+                append_reason(row, candidate)
             continue
 
         row["derived_source_id"] = derived_source_id
