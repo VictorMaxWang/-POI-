@@ -1,0 +1,4 @@
+﻿manual_id,city,district,source_id,source_page,institution_name_raw,address_raw,phone_raw,inclusive_flag_raw,demo_flag_raw,capture_person,capture_date,screenshot_path,remark
+manual_343acbbc095a,南京,,NJ_REG_PUHUI_2025B2,https://wjw.nanjing.gov.cn/njswshjhsywyh/202511/t20251111_5686527.html,,,,,,,,,来源阻塞：http_404
+manual_2aad40622650,苏州,,SZ_REG_MAP_2024,https://www.suzhou.gov.cn/szsrmzf/szyw/202406/43d1eaf4085a435582b8deb958eef36e.shtml,,,,,,,,,需人工补录：manual_app_capture
+manual_8f613535fdea,南通,,NT_REG_PORTAL_2023,https://www.nantong.gov.cn/ntsrmzf/ylfwzx/content/25923065-a8b6-41c4-9b5b-398e22870303.html,,,,,,,,,来源阻塞：http_404

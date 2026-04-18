@@ -1,0 +1,189 @@
+﻿table_name,field_name,field_type,required,description
+source_manifest.csv,source_id,string,Y,唯一来源编号
+source_manifest.csv,city,string,Y,城市名称，ALL 表示跨城市来源
+source_manifest.csv,source_type,string,Y,来源类别，如 census7、registry_platform
+source_manifest.csv,source_name,string,Y,来源中文名称
+source_manifest.csv,official_or_platform,string,Y,official 或 platform 等来源属性
+source_manifest.csv,url_or_page_name,string,Y,可访问 URL 或官方页面名称
+source_manifest.csv,target_table,string,Y,目标落表名称
+source_manifest.csv,target_fields,string,N,预计抽取字段
+source_manifest.csv,access_method,string,Y,html_parse、manual_app_capture 等访问方式
+source_manifest.csv,update_date,string,N,来源页面发布日期或更新时间
+source_manifest.csv,notes,string,N,补充说明
+manual_capture_template.csv,manual_id,string,Y,人工补录任务编号
+manual_capture_template.csv,city,string,Y,城市名称
+manual_capture_template.csv,district,string,N,区县名称
+manual_capture_template.csv,source_id,string,Y,来源编号
+manual_capture_template.csv,source_page,string,Y,需要人工查看的页面
+manual_capture_template.csv,institution_name_raw,string,N,机构原始名称
+manual_capture_template.csv,address_raw,string,N,机构原始地址
+manual_capture_template.csv,phone_raw,string,N,公开电话
+manual_capture_template.csv,inclusive_flag_raw,string,N,原始普惠标记
+manual_capture_template.csv,demo_flag_raw,string,N,原始示范标记
+manual_capture_template.csv,capture_person,string,N,录入人
+manual_capture_template.csv,capture_date,string,N,录入日期
+manual_capture_template.csv,screenshot_path,string,N,证据截图路径
+manual_capture_template.csv,remark,string,N,补充备注
+fetch_log.csv,fetch_time,datetime,Y,抓取时间
+fetch_log.csv,stage,string,Y,抓取阶段
+fetch_log.csv,source_id,string,Y,来源编号
+fetch_log.csv,city,string,Y,城市名称
+fetch_log.csv,target_table,string,Y,目标表
+fetch_log.csv,source_url,string,Y,请求 URL
+fetch_log.csv,http_status,string,N,HTTP 状态码
+fetch_log.csv,fetch_mode,string,Y,normal_tls 或 insecure_tls_retry
+fetch_log.csv,blocker_flag,string,Y,是否命中 blocker
+fetch_log.csv,local_path,string,N,落盘路径
+fetch_log.csv,content_type,string,N,响应类型
+fetch_log.csv,note,string,N,补充说明
+manual_review_list.csv,review_id,string,Y,人工复核编号
+manual_review_list.csv,review_type,string,Y,问题类别
+manual_review_list.csv,ref_table,string,Y,关联表名
+manual_review_list.csv,ref_id,string,Y,关联记录 ID
+manual_review_list.csv,city,string,N,城市名称
+manual_review_list.csv,district,string,N,区县名称
+manual_review_list.csv,issue_summary,string,Y,问题概述
+manual_review_list.csv,issue_detail,string,N,问题详情
+manual_review_list.csv,source_id,string,N,来源编号
+manual_review_list.csv,manual_action,string,Y,建议人工动作
+manual_review_list.csv,status,string,Y,初始状态
+population_city_district.csv,pop_record_id,string,Y,人口记录唯一 ID
+population_city_district.csv,city,string,Y,城市名称
+population_city_district.csv,district,string,N,区县名称，市级总量为空
+population_city_district.csv,stat_year,int,Y,统计年份
+population_city_district.csv,source_id,string,Y,来源编号
+population_city_district.csv,source_url,string,Y,原始来源 URL
+population_city_district.csv,indicator_name,string,Y,指标名，如 resident_population
+population_city_district.csv,indicator_value,string,Y,指标值，保留原始数值表达
+population_city_district.csv,indicator_unit,string,N,单位，如 person、percent
+population_city_district.csv,population_scope,string,N,人口口径，如 resident
+population_city_district.csv,age_group,string,N,年龄分组
+population_city_district.csv,sex_group,string,N,性别分组
+population_city_district.csv,urban_rural,string,N,城乡分组
+population_city_district.csv,note_raw,string,N,原始表头或补充说明
+population_city_district.csv,extract_method,string,Y,抽取方式
+population_city_district.csv,manual_check_flag,string,Y,是否需要人工复核
+nursery_registry_raw.csv,raw_row_id,string,Y,原始机构记录 ID
+nursery_registry_raw.csv,city,string,Y,城市名称
+nursery_registry_raw.csv,district,string,N,区县名称
+nursery_registry_raw.csv,registry_batch_name,string,N,批次名称
+nursery_registry_raw.csv,source_id,string,Y,来源编号
+nursery_registry_raw.csv,source_url,string,Y,原始来源 URL
+nursery_registry_raw.csv,source_publish_date,string,N,来源发布日期
+nursery_registry_raw.csv,institution_name_raw,string,N,机构原始名称
+nursery_registry_raw.csv,address_raw,string,N,机构原始地址
+nursery_registry_raw.csv,operator_name_raw,string,N,举办方/运营方原始名称
+nursery_registry_raw.csv,institution_type_raw,string,N,机构类型原始字段
+nursery_registry_raw.csv,registry_status_raw,string,N,备案状态原始字段
+nursery_registry_raw.csv,inclusive_flag_raw,string,N,普惠原始标记
+nursery_registry_raw.csv,demo_flag_raw,string,N,示范原始标记
+nursery_registry_raw.csv,community_flag_raw,string,N,社区嵌入原始标记
+nursery_registry_raw.csv,phone_raw,string,N,公开电话
+nursery_registry_raw.csv,capacity_raw,string,N,公开托位
+nursery_registry_raw.csv,fee_raw,string,N,公开收费
+nursery_registry_raw.csv,raw_text,string,N,原始文本片段
+nursery_registry_raw.csv,parse_status,string,Y,解析状态
+nursery_registry_raw.csv,manual_check_flag,string,Y,是否需要人工复核
+nursery_master.csv,nursery_id,string,Y,主表机构 ID
+nursery_master.csv,city,string,Y,城市名称
+nursery_master.csv,district,string,N,区县名称
+nursery_master.csv,institution_name_std,string,Y,标准化机构名称
+nursery_master.csv,institution_name_aliases,string,N,别名集合
+nursery_master.csv,institution_form,string,N,托育机构形态
+nursery_master.csv,operator_name_std,string,N,标准化举办方名称
+nursery_master.csv,address_std,string,N,标准化地址
+nursery_master.csv,source_first_id,string,N,首次出现来源
+nursery_master.csv,source_latest_id,string,N,最近一次出现来源
+nursery_master.csv,inclusive_flag,string,N,普惠标记
+nursery_master.csv,community_embedded_flag,string,N,社区嵌入标记
+nursery_master.csv,kindergarten_integrated_flag,string,N,托幼一体标记
+nursery_master.csv,medical_integration_flag,string,N,医育结合标记
+nursery_master.csv,delayed_tempcare_flag,string,N,延时/临托标记
+nursery_master.csv,price_transparent_flag,string,N,价格透明标记
+nursery_master.csv,teacher_emphasis_flag,string,N,师资强调标记
+nursery_master.csv,chain_brand_flag,string,N,连锁品牌标记
+nursery_master.csv,registry_evidence_count,int,Y,证据条数
+nursery_master.csv,geo_status,string,Y,地理编码状态
+nursery_master.csv,text_status,string,Y,文本抓取状态
+nursery_master.csv,review_status,string,Y,人工初审状态
+geo_result.csv,geo_id,string,Y,地理编码结果 ID
+geo_result.csv,object_type,string,Y,对象类型，当前为 nursery
+geo_result.csv,ref_id,string,Y,关联主表 ID
+geo_result.csv,city,string,Y,城市名称
+geo_result.csv,district,string,N,区县名称
+geo_result.csv,address_input,string,Y,输入地址
+geo_result.csv,address_std,string,N,标准化地址
+geo_result.csv,geocode_source,string,Y,编码来源
+geo_result.csv,formatted_address,string,N,高德返回格式化地址
+geo_result.csv,province,string,N,省份
+geo_result.csv,city_name,string,N,高德返回城市
+geo_result.csv,district_name,string,N,高德返回区县
+geo_result.csv,township,string,N,高德返回街镇
+geo_result.csv,adcode,string,N,高德 adcode
+geo_result.csv,lng_gcj02,string,N,GCJ-02 经度
+geo_result.csv,lat_gcj02,string,N,GCJ-02 纬度
+geo_result.csv,geocode_level,string,N,定位级别
+geo_result.csv,source_id,string,Y,来源编号
+geo_result.csv,geocode_time,datetime,Y,编码时间
+geo_result.csv,manual_check_flag,string,Y,是否需要人工复核
+poi_residential.csv,poi_row_id,string,Y,POI 记录 ID
+poi_residential.csv,poi_group,string,Y,residential
+poi_residential.csv,city,string,Y,城市名称
+poi_residential.csv,district,string,N,区县名称
+poi_residential.csv,query_keyword,string,Y,查询关键词
+poi_residential.csv,query_type_code,string,N,查询 typecode
+poi_residential.csv,adcode,string,N,查询 adcode
+poi_residential.csv,search_mode,string,Y,搜索模式
+poi_residential.csv,source_id,string,Y,来源编号
+poi_residential.csv,poi_id,string,N,高德 POI ID
+poi_residential.csv,poi_name,string,N,POI 名称
+poi_residential.csv,poi_type,string,N,POI 类型
+poi_residential.csv,poi_typecode,string,N,POI 类型编码
+poi_residential.csv,address,string,N,POI 地址
+poi_residential.csv,location_gcj02,string,N,经纬度拼接字符串
+poi_residential.csv,tel,string,N,公开电话
+poi_residential.csv,parent_id,string,N,父级 POI ID
+poi_residential.csv,business_area,string,N,商圈
+poi_residential.csv,query_batch_id,string,Y,查询批次 ID
+poi_residential.csv,duplicate_flag,string,Y,去重标记
+poi_residential.csv,manual_check_flag,string,Y,是否需要人工复核
+poi_support.csv,poi_row_id,string,Y,POI 记录 ID
+poi_support.csv,poi_group,string,Y,support
+poi_support.csv,city,string,Y,城市名称
+poi_support.csv,district,string,N,区县名称
+poi_support.csv,query_keyword,string,Y,查询关键词
+poi_support.csv,query_type_code,string,N,查询 typecode
+poi_support.csv,adcode,string,N,查询 adcode
+poi_support.csv,search_mode,string,Y,搜索模式
+poi_support.csv,source_id,string,Y,来源编号
+poi_support.csv,poi_id,string,N,高德 POI ID
+poi_support.csv,poi_name,string,N,POI 名称
+poi_support.csv,poi_type,string,N,POI 类型
+poi_support.csv,poi_typecode,string,N,POI 类型编码
+poi_support.csv,address,string,N,POI 地址
+poi_support.csv,location_gcj02,string,N,经纬度拼接字符串
+poi_support.csv,tel,string,N,公开电话
+poi_support.csv,parent_id,string,N,父级 POI ID
+poi_support.csv,business_area,string,N,商圈
+poi_support.csv,query_batch_id,string,Y,查询批次 ID
+poi_support.csv,duplicate_flag,string,Y,去重标记
+poi_support.csv,manual_check_flag,string,Y,是否需要人工复核
+text_raw.csv,text_id,string,Y,文本记录 ID
+text_raw.csv,nursery_id,string,Y,机构主表 ID
+text_raw.csv,city,string,Y,城市名称
+text_raw.csv,district,string,N,区县名称
+text_raw.csv,source_id,string,Y,来源编号
+text_raw.csv,source_url,string,Y,原始文本页面
+text_raw.csv,page_title,string,N,页面标题
+text_raw.csv,body_text,string,Y,正文纯文本
+text_raw.csv,public_phone_if_any,string,N,页面公开电话
+text_raw.csv,public_price_if_any,string,N,页面公开价格
+text_raw.csv,capture_time,datetime,Y,抓取或入库时间
+text_raw.csv,manual_check_flag,string,Y,是否需要人工复核
+text_tag_suggest.csv,text_id,string,Y,文本记录 ID
+text_tag_suggest.csv,nursery_id,string,Y,机构主表 ID
+text_tag_suggest.csv,ai_tag,string,N,规则建议标签
+text_tag_suggest.csv,rule_hit_detail,string,N,命中规则详情
+text_tag_suggest.csv,human_tag_final,string,N,人工最终标签
+text_tag_suggest.csv,reviewer,string,N,复核人
+text_tag_suggest.csv,review_date,string,N,复核日期
