@@ -1,0 +1,23 @@
+{
+  "source_id": "SZ_REG_MAP_2024",
+  "target_url": "https://app.wsjkw.suzhou.com.cn/ty/#/pages/index/index",
+  "mode": "persistent",
+  "captured_count": 3,
+  "json_count": 3,
+  "detail_count": 1,
+  "list_count": 0,
+  "recommended_json_for_import": "C:\\Users\\12804\\Desktop\\统计建模\\raw_official\\registry_probe\\suzhou\\responses\\20260418T151312_03_jeecg-boot_51ab8f87.json",
+  "recommended_reason": "Fallback to largest readable JSON body.",
+  "started_at": "2026-04-18T07:13:12.435Z",
+  "finished_at": "2026-04-18T07:13:23.827Z",
+  "manifest_path": "C:\\Users\\12804\\Desktop\\统计建模\\raw_official\\registry_probe\\suzhou\\manifest.jsonl",
+  "page_ready_reason": "page_text:机构地图",
+  "clicked_card": {
+    "clicked_at": "2026-04-18T07:13:19.644Z",
+    "text": "输入机构名称",
+    "reason": "heuristic_candidate",
+    "matched_preferred": ""
+  },
+  "list_name_candidates": [],
+  "fallback_reasons": []
+}

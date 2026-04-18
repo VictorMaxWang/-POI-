@@ -29,6 +29,31 @@ const BROWSER_PATHS = {
   ],
 };
 const HEADER_ALLOWLIST = ["accept", "content-type", "origin", "referer", "user-agent", "x-requested-with"];
+const INSTITUTION_HINT_TEXT = [
+  "\u6258\u80b2",
+  "\u673a\u6784",
+  "\u5e7c\u513f\u56ed",
+  "\u6258\u513f\u6240",
+  "\u4fdd\u80b2",
+  "\u5b66\u524d",
+  "\u513f\u7ae5",
+  "\u65e9\u6559",
+  "\u4e2d\u5fc3",
+];
+const SEARCH_LIKE_TEXT = [
+  "\u8f93\u5165\u673a\u6784\u540d\u79f0",
+  "\u673a\u6784\u540d\u79f0",
+  "\u8bf7\u8f93\u5165",
+  "\u8bf7\u8f93\u5165\u5173\u952e\u5b57",
+  "\u641c\u7d22",
+  "placeholder",
+  "search",
+];
+const NOISE_MATCHERS = [
+  { tag: "noise_mobileAccessToken", match: (url) => url.includes("mobileAccessToken") },
+  { tag: "noise_szLoginLog_add", match: (url) => url.includes("szLoginLog/add") },
+  { tag: "noise_queryDepartTreeSync", match: (url) => url.includes("queryDepartTreeSync") },
+];
 const URL_MARKERS = [
   { marker: "listByCondition", rank: 1, kind: "list", match: (url) => url.includes("listByCondition") },
   { marker: "listById", rank: 2, kind: "detail", match: (url) => url.includes("listById") },
@@ -184,6 +209,15 @@ function detectMarker(url) {
   return null;
 }
 
+function detectNoise(url) {
+  for (const matcher of NOISE_MATCHERS) {
+    if (matcher.match(url)) {
+      return matcher.tag;
+    }
+  }
+  return "";
+}
+
 function normalizeHeaderObject(headers) {
   const output = {};
   if (!headers || typeof headers !== "object") {
@@ -272,6 +306,24 @@ function looksLikeInstitutionName(value) {
   return institutionHints.some((item) => text.includes(item));
 }
 
+function looksLikeInstitutionNameStrict(value) {
+  const text = String(value || "").trim();
+  if (text.length < 4 || text.length > 60) {
+    return false;
+  }
+  if (BANNED_CLICK_TEXT.some((item) => text.includes(item))) {
+    return false;
+  }
+  if (SEARCH_LIKE_TEXT.some((item) => text.includes(item))) {
+    return false;
+  }
+  const genericNoise = ["鐐瑰嚮", "鏇村", "鍦板浘", "瀹氫綅", "鐑嚎", "鎼滅储", "鍏ㄩ儴", "闄勮繎", "鍋ュ悍鑻忓窞"];
+  if (genericNoise.some((item) => text.includes(item))) {
+    return false;
+  }
+  return INSTITUTION_HINT_TEXT.some((item) => text.includes(item));
+}
+
 function extractInstitutionNames(payload, limit = 20) {
   const names = [];
   const visited = new Set();
@@ -281,7 +333,7 @@ function extractInstitutionNames(payload, limit = 20) {
       return;
     }
     if (typeof value === "string") {
-      if (looksLikeInstitutionName(value)) {
+      if (looksLikeInstitutionNameStrict(value)) {
         names.push(value.trim());
       }
       return;
@@ -303,7 +355,7 @@ function extractInstitutionNames(payload, limit = 20) {
       return;
     }
     for (const [key, item] of Object.entries(value)) {
-      if (looksLikeInstitutionName(key)) {
+      if (looksLikeInstitutionNameStrict(key)) {
         names.push(key.trim());
       }
       walk(item);
@@ -397,6 +449,7 @@ function buildMetaFilePath(runtime, marker, requestId) {
 }
 
 function recordSavedEntry(runtime, info, savedPath, bodyText, extension) {
+  const parsedJson = isJsonLike(info.contentType, bodyText) ? tryParseJson(bodyText) : null;
   const entry = {
     captured_at: new Date().toISOString(),
     mode: runtime.options.mode,
@@ -408,26 +461,29 @@ function recordSavedEntry(runtime, info, savedPath, bodyText, extension) {
     method: info.method,
     resource_type: info.resourceType,
     marker: info.marker.marker,
+    noise: Boolean(info.noiseTag),
+    noise_tag: info.noiseTag,
     body_readable: true,
     body_sha1: sha1(bodyText),
     body_bytes: Buffer.byteLength(bodyText, "utf8"),
     extension,
+    parseable_json: Boolean(parsedJson),
   };
   saveManifestEntry(runtime, entry);
 
-  if (info.marker.kind === "list") {
+  if (!info.noiseTag && info.marker.kind === "list") {
     runtime.listResponseSeen = true;
   }
-  if (info.marker.kind === "detail" || info.marker.marker === "listById") {
+  if (!info.noiseTag && (info.marker.kind === "detail" || info.marker.marker === "listById")) {
     runtime.detailResponseSeen = true;
   }
-  if (isJsonLike(info.contentType, bodyText)) {
-    const parsed = tryParseJson(bodyText);
-    if (parsed && info.marker.kind === "list") {
-      runtime.listNameCandidates = unique([...runtime.listNameCandidates, ...extractInstitutionNames(parsed)]).slice(0, 30);
+  if (parsedJson) {
+    if (!info.noiseTag && info.marker.kind === "list") {
+      runtime.listNameCandidates = unique([...runtime.listNameCandidates, ...extractInstitutionNames(parsedJson)]).slice(0, 30);
     }
   }
-  console.log(`[saved] ${info.marker.marker} -> ${savedPath}`);
+  const noiseLabel = info.noiseTag ? ` noise=${info.noiseTag}` : "";
+  console.log(`[saved] ${info.marker.marker}${noiseLabel} -> ${savedPath}`);
 }
 
 function recordUnreadableEntry(runtime, info, errorMessage) {
@@ -440,6 +496,8 @@ function recordUnreadableEntry(runtime, info, errorMessage) {
     method: info.method,
     status: info.status,
     marker: info.marker.marker,
+    noise: Boolean(info.noiseTag),
+    noise_tag: info.noiseTag,
     body_read_error: errorMessage,
     request_headers_summary: summarizeHeaders(info.requestHeaders),
     response_headers_summary: summarizeHeaders(info.responseHeaders),
@@ -456,8 +514,11 @@ function recordUnreadableEntry(runtime, info, errorMessage) {
     method: info.method,
     resource_type: info.resourceType,
     marker: info.marker.marker,
+    noise: Boolean(info.noiseTag),
+    noise_tag: info.noiseTag,
     body_readable: false,
     meta_path: metaPath,
+    parseable_json: false,
   });
   addFallbackReason(runtime, `body_unreadable:${info.marker.marker}`);
   console.warn(`[meta] ${info.marker.marker} -> ${metaPath}`);
@@ -526,7 +587,7 @@ function clearProbeTagsScript() {
 async function waitForListReady(page, runtime) {
   const started = Date.now();
   while (Date.now() - started < runtime.options.listReadyTimeoutMs) {
-    const pageState = await page.evaluate((bannedText) => {
+    const pageState = await page.evaluate(({ bannedText, institutionHints, searchLikeText }) => {
       const normalize = (value) => (value || "").replace(/\\s+/g, " ").trim();
       const bodyText = normalize(document.body ? document.body.innerText : "");
       const hasMapText = bodyText.includes("机构地图");
@@ -544,6 +605,36 @@ async function waitForListReady(page, runtime) {
         return rect.width >= 90 && rect.height >= 24 && rect.bottom > 40 && rect.top < window.innerHeight;
       }
 
+      function isSearchLikeElement(element) {
+        let node = element;
+        while (node && node !== document.body) {
+          const tagName = String(node.tagName || "").toLowerCase();
+          const text = normalize(node.innerText || node.textContent || "");
+          const attrs = [
+            node.getAttribute ? node.getAttribute("placeholder") || "" : "",
+            node.getAttribute ? node.getAttribute("aria-label") || "" : "",
+            node.getAttribute ? node.getAttribute("role") || "" : "",
+            node.getAttribute ? node.getAttribute("type") || "" : "",
+            node.getAttribute ? node.getAttribute("class") || "" : "",
+            node.getAttribute ? node.getAttribute("name") || "" : "",
+          ]
+            .map(normalize)
+            .join(" ");
+          if (tagName === "input" || tagName === "textarea" || node.isContentEditable) {
+            return true;
+          }
+          if (searchLikeText.some((item) => text.includes(item) || attrs.includes(item))) {
+            return true;
+          }
+          node = node.parentElement;
+        }
+        return false;
+      }
+
+      function isInstitutionLikeText(text) {
+        return institutionHints.some((item) => text.includes(item));
+      }
+
       for (const element of Array.from(document.querySelectorAll("body *"))) {
         if (!isVisible(element)) {
           continue;
@@ -555,7 +646,13 @@ async function waitForListReady(page, runtime) {
         if (bannedText.some((item) => text.includes(item))) {
           continue;
         }
+        if (isSearchLikeElement(element)) {
+          continue;
+        }
         if (!/[\\u4e00-\\u9fff]/.test(text)) {
+          continue;
+        }
+        if (!isInstitutionLikeText(text)) {
           continue;
         }
         candidates.push(text);
@@ -569,7 +666,7 @@ async function waitForListReady(page, runtime) {
         candidateCount: candidates.length,
         bodyPreview: bodyText.slice(0, 200),
       };
-    }, BANNED_CLICK_TEXT);
+    }, { bannedText: BANNED_CLICK_TEXT, institutionHints: INSTITUTION_HINT_TEXT, searchLikeText: SEARCH_LIKE_TEXT });
 
     if (pageState.hasMapText) {
       runtime.pageReadyReason = "page_text:机构地图";
@@ -592,7 +689,7 @@ async function waitForListReady(page, runtime) {
 async function selectCardTarget(page, preferredNames) {
   await page.evaluate(clearProbeTagsScript());
   return page.evaluate(
-    ({ preferredNames: names, bannedText }) => {
+    ({ preferredNames: names, bannedText, institutionHints, searchLikeText }) => {
       const normalize = (value) => (value || "").replace(/\s+/g, " ").trim();
       const preferred = names.map(normalize).filter(Boolean);
 
@@ -606,6 +703,36 @@ async function selectCardTarget(page, preferredNames) {
         }
         const rect = element.getBoundingClientRect();
         return rect.width >= 90 && rect.height >= 24 && rect.bottom > 40 && rect.top < window.innerHeight;
+      }
+
+      function isSearchLikeElement(element) {
+        let node = element;
+        while (node && node !== document.body) {
+          const tagName = String(node.tagName || "").toLowerCase();
+          const text = normalize(node.innerText || node.textContent || "");
+          const attrs = [
+            node.getAttribute ? node.getAttribute("placeholder") || "" : "",
+            node.getAttribute ? node.getAttribute("aria-label") || "" : "",
+            node.getAttribute ? node.getAttribute("role") || "" : "",
+            node.getAttribute ? node.getAttribute("type") || "" : "",
+            node.getAttribute ? node.getAttribute("class") || "" : "",
+            node.getAttribute ? node.getAttribute("name") || "" : "",
+          ]
+            .map(normalize)
+            .join(" ");
+          if (tagName === "input" || tagName === "textarea" || node.isContentEditable) {
+            return true;
+          }
+          if (searchLikeText.some((item) => text.includes(item) || attrs.includes(item))) {
+            return true;
+          }
+          node = node.parentElement;
+        }
+        return false;
+      }
+
+      function isInstitutionLikeText(text) {
+        return institutionHints.some((item) => text.includes(item));
       }
 
       function findClickable(element) {
@@ -628,6 +755,21 @@ async function selectCardTarget(page, preferredNames) {
         return element;
       }
 
+      function findCardRoot(element) {
+        let best = null;
+        let node = element;
+        while (node && node !== document.body) {
+          if (isVisible(node) && !isSearchLikeElement(node)) {
+            const rect = node.getBoundingClientRect();
+            if (rect.width >= 140 && rect.height >= 40) {
+              best = node;
+            }
+          }
+          node = node.parentElement;
+        }
+        return best;
+      }
+
       const candidates = [];
       for (const element of Array.from(document.querySelectorAll("body *"))) {
         if (!isVisible(element)) {
@@ -643,10 +785,15 @@ async function selectCardTarget(page, preferredNames) {
         if (bannedText.some((item) => text.includes(item))) {
           continue;
         }
+        if (isSearchLikeElement(element)) {
+          continue;
+        }
         const rect = element.getBoundingClientRect();
         if (rect.top < 70 || rect.left > window.innerWidth - 40) {
           continue;
         }
+        const isInstitutionText = isInstitutionLikeText(text);
+        const cardRoot = findCardRoot(element);
         let score = 10;
         if (rect.width >= 180) {
           score += 8;
@@ -657,22 +804,35 @@ async function selectCardTarget(page, preferredNames) {
         if (rect.top > 80 && rect.top < window.innerHeight - 40) {
           score += 6;
         }
+        if (isInstitutionText) {
+          score += 35;
+        }
         if (text.includes("托育") || text.includes("幼儿园") || text.includes("托儿所")) {
           score += 12;
         }
         const matchedPreferred = preferred.find((name) => text.includes(name) || name.includes(text)) || "";
         if (matchedPreferred) {
-          score += 30;
+          score += 60;
+        }
+        if (cardRoot) {
+          score += 20;
         }
         candidates.push({
           text,
           score,
+          isInstitutionText,
           matchedPreferred,
-          target: findClickable(element),
+          target: findClickable(cardRoot || element),
         });
       }
 
-      candidates.sort((left, right) => right.score - left.score || left.text.length - right.text.length);
+      candidates.sort(
+        (left, right) =>
+          Number(right.isInstitutionText) - Number(left.isInstitutionText) ||
+          Number(Boolean(right.matchedPreferred)) - Number(Boolean(left.matchedPreferred)) ||
+          right.score - left.score ||
+          left.text.length - right.text.length,
+      );
       const picked = candidates[0];
       if (!picked || !picked.target) {
         return { clicked: false, reason: "no_candidate" };
@@ -687,7 +847,12 @@ async function selectCardTarget(page, preferredNames) {
         matchedPreferred: picked.matchedPreferred,
       };
     },
-    { preferredNames, bannedText: BANNED_CLICK_TEXT },
+    {
+      preferredNames,
+      bannedText: BANNED_CLICK_TEXT,
+      institutionHints: INSTITUTION_HINT_TEXT,
+      searchLikeText: SEARCH_LIKE_TEXT,
+    },
   );
 }
 
@@ -754,6 +919,7 @@ function buildRequestInfo(runtime, event) {
     method: event.request.method || "GET",
     resourceType: String(event.type || "").toLowerCase(),
     marker,
+    noiseTag: detectNoise(event.request.url),
     requestHeaders: normalizeHeaderObject(event.request.headers),
     responseHeaders: {},
     status: null,
@@ -782,7 +948,8 @@ async function setupNetworkCapture(page, context, runtime) {
     info.contentType = event.response.mimeType || event.response.headers?.["content-type"] || "";
     info.responseHeaders = normalizeHeaderObject(event.response.headers);
     info.url = event.response.url || info.url;
-    if (info.marker.kind === "list") {
+    info.noiseTag = detectNoise(info.url) || info.noiseTag;
+    if (!info.noiseTag && info.marker.kind === "list") {
       runtime.listResponseSeen = true;
     }
   });
@@ -828,9 +995,11 @@ async function setupNetworkCapture(page, context, runtime) {
 }
 
 function chooseRecommendedJson(savedEntries) {
-  const jsonEntries = savedEntries.filter((entry) => entry.body_readable && entry.extension === ".json");
+  const jsonEntries = savedEntries.filter(
+    (entry) => entry.body_readable && entry.extension === ".json" && entry.parseable_json && !entry.noise,
+  );
   if (!jsonEntries.length) {
-    return { filePath: "", reason: "No readable JSON body captured." };
+    return { filePath: "", reason: "No parseable non-noise JSON body captured." };
   }
 
   const scoreOrder = [
@@ -857,13 +1026,22 @@ function chooseRecommendedJson(savedEntries) {
   }
 
   const fallback = [...jsonEntries].sort((left, right) => (right.body_bytes || 0) - (left.body_bytes || 0))[0];
-  return { filePath: fallback.file_path, reason: "Fallback to largest readable JSON body." };
+  return { filePath: fallback.file_path, reason: "Fallback to largest parseable non-noise JSON body." };
 }
 
 function buildSummary(runtime) {
-  const jsonEntries = runtime.savedEntries.filter((entry) => entry.body_readable && entry.extension === ".json");
-  const listCount = runtime.savedEntries.filter((entry) => entry.body_readable && (entry.marker === "listByCondition" || entry.marker === "/daycare/szMenuOption/getHomeList")).length;
-  const detailCount = runtime.savedEntries.filter((entry) => entry.body_readable && (entry.marker === "listById" || entry.marker === "/daycare/")).length;
+  const jsonEntries = runtime.savedEntries.filter(
+    (entry) => entry.body_readable && entry.extension === ".json" && entry.parseable_json && !entry.noise,
+  );
+  const listCount = runtime.savedEntries.filter(
+    (entry) =>
+      entry.body_readable &&
+      !entry.noise &&
+      (entry.marker === "listByCondition" || entry.marker === "/daycare/szMenuOption/getHomeList"),
+  ).length;
+  const detailCount = runtime.savedEntries.filter(
+    (entry) => entry.body_readable && !entry.noise && (entry.marker === "listById" || entry.marker === "/daycare/"),
+  ).length;
   const recommended = chooseRecommendedJson(runtime.savedEntries);
 
   const onlyNoiseMarkers = runtime.savedEntries.length > 0 && listCount === 0 && detailCount === 0;
