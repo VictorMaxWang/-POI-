@@ -1,0 +1,74 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "3",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省盐城市亭湖区盐城经济技术开发区松江路",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0515",
+      "city": "盐城市",
+      "district": "亭湖区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320902",
+      "street": "松江路",
+      "number": [],
+      "location": "120.222352,33.383671",
+      "level": "道路"
+    },
+    {
+      "formatted_address": "江苏省盐城市亭湖区盐城经济技术开发区松江路",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0515",
+      "city": "盐城市",
+      "district": "亭湖区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320902",
+      "street": "松江路",
+      "number": [],
+      "location": "120.222352,33.383671",
+      "level": "道路"
+    },
+    {
+      "formatted_address": "江苏省盐城市亭湖区盐城经济技术开发区松江路",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0515",
+      "city": "盐城市",
+      "district": "亭湖区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320902",
+      "street": "松江路",
+      "number": [],
+      "location": "120.222352,33.383671",
+      "level": "道路"
+    }
+  ]
+}

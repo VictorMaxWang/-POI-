@@ -1,0 +1,52 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "2",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南通市海门区育才路77号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0513",
+      "city": "南通市",
+      "district": "海门区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320614",
+      "street": "育才路",
+      "number": "77号",
+      "location": "121.177287,31.892754",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南通市海门区育才路77号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0513",
+      "city": "南通市",
+      "district": "海门区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320614",
+      "street": "育才路",
+      "number": [],
+      "location": "121.374801,32.064293",
+      "level": "门牌号"
+    }
+  ]
+}

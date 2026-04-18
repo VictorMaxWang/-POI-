@@ -1,0 +1,22 @@
+{
+  "nursery_id": "nursery_3151208996e7",
+  "city": "南京",
+  "district": "",
+  "institution_name_std": "南京市佳营幼儿园托班",
+  "address_std": "南京市秦淮区佳营东路6-1",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "南京市秦淮区佳营东路6-1",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%8D%97%E4%BA%AC%E5%B8%82%E7%A7%A6%E6%B7%AE%E5%8C%BA%E4%BD%B3%E8%90%A5%E4%B8%9C%E8%B7%AF6-1&city=%E5%8D%97%E4%BA%AC",
+      "status": "1",
+      "infocode": "10000",
+      "count": 2
+    }
+  ],
+  "selected_address": "南京市秦淮区佳营东路6-1",
+  "selected_count": 2,
+  "used_fallback": false,
+  "updated_at": "2026-04-18 18:35:03"
+}

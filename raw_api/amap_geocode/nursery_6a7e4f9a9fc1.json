@@ -1,0 +1,74 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "3",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市秦淮区光华路2-14号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "光华路",
+      "number": "2-14号",
+      "location": "118.818116,32.018981",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区光华路2号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "光华路",
+      "number": "2号",
+      "location": "118.816855,32.019108",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区光华东街2号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "光华东街",
+      "number": [],
+      "location": "118.824155,32.025021",
+      "level": "门牌号"
+    }
+  ]
+}

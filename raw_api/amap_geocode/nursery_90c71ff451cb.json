@@ -1,0 +1,52 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "2",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市秦淮区标营2号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "标营",
+      "number": "2号",
+      "location": "118.820412,32.028292",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区标营2号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "标营",
+      "number": "2号",
+      "location": "118.818739,32.029289",
+      "level": "门址"
+    }
+  ]
+}

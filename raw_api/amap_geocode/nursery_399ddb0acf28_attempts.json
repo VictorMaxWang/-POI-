@@ -1,0 +1,30 @@
+{
+  "nursery_id": "nursery_399ddb0acf28",
+  "city": "南京",
+  "district": "",
+  "institution_name_std": "南京市府西街小学附属幼儿园",
+  "address_std": "秦淮区秣陵路16号",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "秦淮区秣陵路16号",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E7%A7%A6%E6%B7%AE%E5%8C%BA%E7%A7%A3%E9%99%B5%E8%B7%AF16%E5%8F%B7&city=%E5%8D%97%E4%BA%AC",
+      "status": "0",
+      "infocode": "10021",
+      "count": 0
+    },
+    {
+      "attempt_index": 2,
+      "address": "南京市秦淮区秣陵路16号",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%8D%97%E4%BA%AC%E5%B8%82%E7%A7%A6%E6%B7%AE%E5%8C%BA%E7%A7%A3%E9%99%B5%E8%B7%AF16%E5%8F%B7&city=%E5%8D%97%E4%BA%AC",
+      "status": "0",
+      "infocode": "10021",
+      "count": 0
+    }
+  ],
+  "selected_address": "南京市秦淮区秣陵路16号",
+  "selected_count": 0,
+  "used_fallback": true,
+  "updated_at": "2026-04-18 18:35:03"
+}

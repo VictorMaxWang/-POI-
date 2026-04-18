@@ -1,0 +1,41 @@
+{
+  "suggestion": {
+    "keywords": [],
+    "cities": []
+  },
+  "count": "21",
+  "infocode": "10000",
+  "pois": [
+    {
+      "parent": "B020106ONX",
+      "distance": [],
+      "keytag": "法律服务",
+      "importance": [],
+      "biz_ext": [],
+      "type": "生活服务;事务所;律师事务所",
+      "photos": [],
+      "building": [],
+      "typecode": "070701",
+      "shopinfo": "0",
+      "poiweight": [],
+      "adname": "通州区",
+      "featured_reviews_remake": [],
+      "tel": [],
+      "id": "B02010UIQK",
+      "address": "碧华路188号大唐·碧华苑",
+      "space_num": [],
+      "pname": "江苏省",
+      "biz_type": [],
+      "cityname": "南通市",
+      "childtype": "320",
+      "atag": [],
+      "name": "南通市通州区城星法律服务所(大唐·碧华苑店)",
+      "location": "121.068309,32.069044",
+      "shopid": [],
+      "favorite_num": [],
+      "featured_reviews": []
+    }
+  ],
+  "status": "1",
+  "info": "OK"
+}

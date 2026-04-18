@@ -1,0 +1,22 @@
+{
+  "nursery_id": "nursery_889e50f8048b",
+  "city": "南通",
+  "district": "",
+  "institution_name_std": "贝悠儿幼儿园",
+  "address_std": "平潮镇晏园枫庭21幢",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "平潮镇晏园枫庭21幢",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%B9%B3%E6%BD%AE%E9%95%87%E6%99%8F%E5%9B%AD%E6%9E%AB%E5%BA%AD21%E5%B9%A2&city=%E5%8D%97%E9%80%9A",
+      "status": "1",
+      "infocode": "10000",
+      "count": 1
+    }
+  ],
+  "selected_address": "平潮镇晏园枫庭21幢",
+  "selected_count": 1,
+  "used_fallback": false,
+  "updated_at": "2026-04-18 18:35:05"
+}

@@ -273,4 +273,31 @@
 - next_action: 设置环境变量 AMAP_WEB_API_KEY 后再运行 fetch_residential_poi.py。
 - resolved_flag: 0
 
+### 2026-04-18 16:45:07 | geocode | AMAP_GEOCODE_DOC
+- source_id: AMAP_GEOCODE_DOC
+- page_role: api_reference
+- url: https://lbs.amap.com/api/webservice/guide/api/georegeo
+- reason: missing_api_key
+- last_seen: 2026-04-18 16:45:07
+- next_action: 设置环境变量 AMAP_WEB_API_KEY 后再运行 geocode_addresses.py。
+- resolved_flag: 0
+
+### 2026-04-18 16:45:18 | poi_residential | AMAP_POI_DOC
+- source_id: AMAP_POI_DOC
+- page_role: api_reference
+- url: https://lbs.amap.com/api/webservice/guide/api-advanced/search
+- reason: missing_api_key
+- last_seen: 2026-04-18 16:45:18
+- next_action: 设置环境变量 AMAP_WEB_API_KEY 后再运行 fetch_residential_poi.py。
+- resolved_flag: 0
+
+### 2026-04-18 16:45:18 | poi_support | AMAP_POI_DOC
+- source_id: AMAP_POI_DOC
+- page_role: api_reference
+- url: https://lbs.amap.com/api/webservice/guide/api-advanced/search
+- reason: missing_api_key
+- last_seen: 2026-04-18 16:45:18
+- next_action: 设置环境变量 AMAP_WEB_API_KEY 后再运行 fetch_support_poi.py。
+- resolved_flag: 0
+
 ## 未分类

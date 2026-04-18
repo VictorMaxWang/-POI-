@@ -1,0 +1,30 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "1",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市江宁区清水亭东路9号68幢",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "江宁区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320115",
+      "street": "清水亭东路",
+      "number": "9号68幢",
+      "location": "118.833160,31.919226",
+      "level": "门址"
+    }
+  ]
+}

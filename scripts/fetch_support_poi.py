@@ -35,16 +35,30 @@ def get_api_key(cli_value: str | None) -> str:
 
 def build_scopes() -> list[dict[str, str]]:
     population_rows = read_csv_rows(CLEAN_DIR / "population_city_district.csv")
+    nursery_rows = read_csv_rows(CLEAN_DIR / "nursery_master.csv")
     scopes = []
     seen = set()
+    population_cities = set()
+
+    def add_scope(city: str, district: str) -> None:
+        key = (city, district)
+        if not city or key in seen:
+            return
+        seen.add(key)
+        scopes.append({"city": city, "district": district, "adcode": DEFAULT_CITY_ADCODES.get(city, "")})
+
     for row in population_rows:
         city = row.get("city", "")
         district = row.get("district", "")
-        key = (city, district)
-        if not city or key in seen:
+        population_cities.add(city)
+        add_scope(city, district)
+
+    for row in nursery_rows:
+        city = row.get("city", "")
+        if city in population_cities:
             continue
-        seen.add(key)
-        scopes.append({"city": city, "district": district, "adcode": DEFAULT_CITY_ADCODES.get(city, "")})
+        add_scope(city, row.get("district", ""))
+
     if not scopes:
         for city, adcode in DEFAULT_CITY_ADCODES.items():
             scopes.append({"city": city, "district": "", "adcode": adcode})

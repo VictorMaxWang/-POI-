@@ -1,0 +1,30 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "1",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省盐城市大丰区晨风路2号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0515",
+      "city": "盐城市",
+      "district": "大丰区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320904",
+      "street": "晨风路",
+      "number": "2号",
+      "location": "120.483372,33.177170",
+      "level": "门址"
+    }
+  ]
+}

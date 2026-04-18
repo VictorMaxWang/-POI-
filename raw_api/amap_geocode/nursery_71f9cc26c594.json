@@ -1,0 +1,52 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "2",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市秦淮区双塘路柳叶街133号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "双塘路",
+      "number": "133号",
+      "location": "118.772975,32.025490",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区双塘路柳叶街113号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "双塘路",
+      "number": [],
+      "location": "118.773094,32.027227",
+      "level": "门牌号"
+    }
+  ]
+}

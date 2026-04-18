@@ -1,0 +1,30 @@
+{
+  "nursery_id": "nursery_9378f05459d5",
+  "city": "南京",
+  "district": "",
+  "institution_name_std": "南京市秦淮区文昌巷幼儿园托班",
+  "address_std": "南京市秦淮区文昌巷19号－2",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "南京市秦淮区文昌巷19号－2",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%8D%97%E4%BA%AC%E5%B8%82%E7%A7%A6%E6%B7%AE%E5%8C%BA%E6%96%87%E6%98%8C%E5%B7%B719%E5%8F%B7%EF%BC%8D2&city=%E5%8D%97%E4%BA%AC",
+      "status": "0",
+      "infocode": "10021",
+      "count": 0
+    },
+    {
+      "attempt_index": 2,
+      "address": "南京市秦淮区文昌巷19号-2",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%8D%97%E4%BA%AC%E5%B8%82%E7%A7%A6%E6%B7%AE%E5%8C%BA%E6%96%87%E6%98%8C%E5%B7%B719%E5%8F%B7-2&city=%E5%8D%97%E4%BA%AC",
+      "status": "1",
+      "infocode": "10000",
+      "count": 1
+    }
+  ],
+  "selected_address": "南京市秦淮区文昌巷19号-2",
+  "selected_count": 1,
+  "used_fallback": true,
+  "updated_at": "2026-04-18 18:35:01"
+}

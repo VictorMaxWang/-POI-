@@ -1,0 +1,30 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "1",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市江宁区天元西路88号12",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "江宁区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320115",
+      "street": "天元西路",
+      "number": "88号12",
+      "location": "118.811030,31.928870",
+      "level": "门址"
+    }
+  ]
+}

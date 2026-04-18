@@ -1,0 +1,41 @@
+{
+  "suggestion": {
+    "keywords": [],
+    "cities": []
+  },
+  "count": "1",
+  "infocode": "10000",
+  "pois": [
+    {
+      "parent": "B0FFJXRI6C",
+      "distance": [],
+      "keytag": "妇幼医院",
+      "importance": [],
+      "biz_ext": [],
+      "type": "医疗保健服务;专科医院;专科医院",
+      "photos": [],
+      "building": [],
+      "typecode": "090200",
+      "shopinfo": "2",
+      "poiweight": [],
+      "adname": "盐都区",
+      "featured_reviews_remake": [],
+      "tel": "0515-88328405",
+      "id": "B0FFK52324",
+      "address": "振兴路盐都公共卫生服务中心楼内",
+      "space_num": [],
+      "pname": "江苏省",
+      "biz_type": [],
+      "cityname": "盐城市",
+      "childtype": "202",
+      "atag": [],
+      "name": "盐城市盐都区妇幼保健所",
+      "location": "120.089111,33.323909",
+      "shopid": [],
+      "favorite_num": [],
+      "featured_reviews": []
+    }
+  ],
+  "status": "1",
+  "info": "OK"
+}

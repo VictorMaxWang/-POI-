@@ -1,0 +1,22 @@
+{
+  "nursery_id": "nursery_3ce8a665e75e",
+  "city": "苏州",
+  "district": "",
+  "institution_name_std": "张家港市新塍幼儿园",
+  "address_std": "张家港市后塍街道新学路1号",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "张家港市后塍街道新学路1号",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%BC%A0%E5%AE%B6%E6%B8%AF%E5%B8%82%E5%90%8E%E5%A1%8D%E8%A1%97%E9%81%93%E6%96%B0%E5%AD%A6%E8%B7%AF1%E5%8F%B7&city=%E8%8B%8F%E5%B7%9E",
+      "status": "1",
+      "infocode": "10000",
+      "count": 1
+    }
+  ],
+  "selected_address": "张家港市后塍街道新学路1号",
+  "selected_count": 1,
+  "used_fallback": false,
+  "updated_at": "2026-04-18 18:35:09"
+}

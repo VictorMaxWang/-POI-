@@ -1,0 +1,41 @@
+{
+  "suggestion": {
+    "keywords": [],
+    "cities": []
+  },
+  "count": "24",
+  "infocode": "10000",
+  "pois": [
+    {
+      "parent": "B0FFGAD40P",
+      "distance": [],
+      "keytag": "美容",
+      "importance": [],
+      "biz_ext": [],
+      "type": "生活服务;美容美发店;美容美发店",
+      "photos": [],
+      "building": [],
+      "typecode": "071100",
+      "shopinfo": "1",
+      "poiweight": [],
+      "adname": "大丰区",
+      "featured_reviews_remake": [],
+      "tel": "13770237094",
+      "id": "B0JK35F9BT",
+      "address": "大丰区高新区花园南路3号碧水豪庭38幢S104室",
+      "space_num": [],
+      "pname": "江苏省",
+      "biz_type": [],
+      "cityname": "盐城市",
+      "childtype": "320",
+      "atag": [],
+      "name": "清颜健康管理中心(碧水豪庭店)",
+      "location": "120.507824,33.201774",
+      "shopid": [],
+      "favorite_num": [],
+      "featured_reviews": []
+    }
+  ],
+  "status": "1",
+  "info": "OK"
+}

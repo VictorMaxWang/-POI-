@@ -78,6 +78,7 @@ function printHelp() {
     "  --mode persistent|cdp         Capture mode. Default: persistent",
     "  --browser chrome|edge|auto    Browser preference. Default: chrome",
     "  --cdp-url URL                 CDP endpoint for --mode cdp. Default: http://127.0.0.1:9222",
+    "  --reload-on-attach true|false Reload reused CDP page after attaching. Default: true for cdp, false for persistent",
     `  --target-url URL              Page to open. Default: ${DEFAULT_TARGET_URL}`,
     `  --source-id ID                Evidence source id. Default: ${DEFAULT_SOURCE_ID}`,
     `  --out-dir PATH                Output directory. Default: ${DEFAULT_OUT_DIR}`,
@@ -99,6 +100,7 @@ function parseArgs(argv) {
     sourceId: DEFAULT_SOURCE_ID,
     outDir: DEFAULT_OUT_DIR,
     headless: false,
+    reloadOnAttach: null,
     listReadyTimeoutMs: 25000,
     postClickWaitMs: 12000,
   };
@@ -141,6 +143,12 @@ function parseArgs(argv) {
       case "out-dir":
         options.outDir = value;
         break;
+      case "reload-on-attach":
+        if (!["true", "false"].includes(String(value).toLowerCase())) {
+          throw new Error(`Unsupported boolean for ${token}: ${value}`);
+        }
+        options.reloadOnAttach = String(value).toLowerCase() === "true";
+        break;
       case "list-ready-timeout-ms":
         options.listReadyTimeoutMs = Number(value);
         break;
@@ -157,6 +165,9 @@ function parseArgs(argv) {
   }
   if (!["chrome", "edge", "auto"].includes(options.browser)) {
     throw new Error(`Unsupported --browser: ${options.browser}`);
+  }
+  if (options.reloadOnAttach == null) {
+    options.reloadOnAttach = options.mode === "cdp";
   }
   options.outDir = path.resolve(options.outDir);
   new URL(options.targetUrl);
@@ -420,7 +431,12 @@ function createRuntime(options) {
     detailResponseSeen: false,
     captureSequence: 0,
     pageReadyReason: "",
+    pageUrl: "",
+    didReload: false,
+    candidateCardCount: 0,
     clickedCard: null,
+    waitedAfterReloadMs: 0,
+    waitedAfterClickMs: 0,
     fallbackReasons: [],
   };
 }
@@ -468,6 +484,7 @@ function recordSavedEntry(runtime, info, savedPath, bodyText, extension) {
     body_bytes: Buffer.byteLength(bodyText, "utf8"),
     extension,
     parseable_json: Boolean(parsedJson),
+    decoded_from: info.decodedFrom || "",
   };
   saveManifestEntry(runtime, entry);
 
@@ -582,6 +599,295 @@ function clearProbeTagsScript() {
       }
     })();
   `;
+}
+
+async function installPageDecodedProbe(page) {
+  await page.addInitScript(({ institutionHints }) => {
+    const globalObject = globalThis;
+    if (globalObject.__codexProbeState) {
+      return;
+    }
+
+    const state = {
+      records: [],
+      recentUrls: [],
+      maxRecords: 60,
+      maxRecentUrls: 12,
+      maxRecentUrlAgeMs: 15000,
+    };
+    globalObject.__codexProbeState = state;
+
+    function normalize(value) {
+      return String(value || "").replace(/\s+/g, " ").trim();
+    }
+
+    function trimRecentUrls() {
+      const now = Date.now();
+      state.recentUrls = state.recentUrls
+        .filter((entry) => entry && entry.url && now - entry.at <= state.maxRecentUrlAgeMs)
+        .slice(0, state.maxRecentUrls);
+    }
+
+    function rememberUrl(url) {
+      const normalized = normalize(url);
+      if (!normalized) {
+        return;
+      }
+      state.recentUrls.unshift({ url: normalized, at: Date.now() });
+      trimRecentUrls();
+    }
+
+    function recentUrl() {
+      trimRecentUrls();
+      return state.recentUrls[0]?.url || "";
+    }
+
+    function safeJson(value) {
+      try {
+        return JSON.stringify(value);
+      } catch {
+        return "";
+      }
+    }
+
+    function looksInteresting(value) {
+      if (value == null) {
+        return false;
+      }
+      if (typeof value === "string") {
+        const text = normalize(value);
+        if (!text) {
+          return false;
+        }
+        if (text.startsWith("{") || text.startsWith("[")) {
+          return true;
+        }
+        if (institutionHints.some((item) => text.includes(item))) {
+          return true;
+        }
+        return /daycare|childcare|records|pageNo|pageSize|name|address|latitude|longitude|institution|org/i.test(text);
+      }
+      if (typeof value !== "object") {
+        return false;
+      }
+
+      const queue = [value];
+      const seen = new WeakSet();
+      let inspected = 0;
+      while (queue.length && inspected < 40) {
+        const current = queue.shift();
+        inspected += 1;
+        if (!current || typeof current !== "object") {
+          continue;
+        }
+        if (seen.has(current)) {
+          continue;
+        }
+        seen.add(current);
+
+        if (Array.isArray(current)) {
+          if (current.length && typeof current[0] === "object") {
+            return true;
+          }
+          for (const item of current.slice(0, 6)) {
+            if (typeof item === "string" && institutionHints.some((hint) => item.includes(hint))) {
+              return true;
+            }
+            if (item && typeof item === "object") {
+              queue.push(item);
+            }
+          }
+          continue;
+        }
+
+        for (const [key, item] of Object.entries(current).slice(0, 24)) {
+          const keyText = normalize(key);
+          if (/daycare|childcare|records|list|name|title|address|longitude|latitude|institution|org|pageNo|pageSize/i.test(keyText)) {
+            return true;
+          }
+          if (typeof item === "string" && institutionHints.some((hint) => item.includes(hint))) {
+            return true;
+          }
+          if (item && typeof item === "object") {
+            queue.push(item);
+          }
+        }
+      }
+      return false;
+    }
+
+    function pushRecord(record) {
+      const payload = record?.payload;
+      if (!looksInteresting(payload)) {
+        return;
+      }
+      const bodyText = typeof payload === "string" ? payload : safeJson(payload);
+      if (!bodyText) {
+        return;
+      }
+      state.records.push({
+        capturedAt: new Date().toISOString(),
+        kind: record.kind || "page_runtime",
+        url: normalize(record.url) || recentUrl(),
+        method: normalize(record.method) || "GET",
+        status: Number(record.status || 200),
+        bodyText,
+      });
+      if (state.records.length > state.maxRecords) {
+        state.records.splice(0, state.records.length - state.maxRecords);
+      }
+    }
+
+    globalObject.__codexProbePull = () => {
+      const snapshot = state.records.slice();
+      state.records.length = 0;
+      return snapshot;
+    };
+
+    const originalJsonParse = JSON.parse.bind(JSON);
+    JSON.parse = function patchedJsonParse(text, reviver) {
+      const result = originalJsonParse(text, reviver);
+      try {
+        const trimmed = typeof text === "string" ? text.trimStart() : "";
+        if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+          pushRecord({ kind: "json_parse", url: recentUrl(), payload: result });
+        }
+      } catch {
+        // ignore probe errors
+      }
+      return result;
+    };
+
+    const originalOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function patchedOpen(method, url, ...rest) {
+      this.__codexProbeMethod = normalize(method) || "GET";
+      this.__codexProbeUrl = normalize(url);
+      return originalOpen.call(this, method, url, ...rest);
+    };
+
+    const originalSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function patchedSend(...rest) {
+      this.addEventListener("readystatechange", () => {
+        if (this.readyState !== 4) {
+          return;
+        }
+        const url = normalize(this.responseURL) || this.__codexProbeUrl || "";
+        rememberUrl(url);
+        try {
+          const rawText = typeof this.responseText === "string" ? this.responseText.trimStart() : "";
+          if (rawText.startsWith("{") || rawText.startsWith("[")) {
+            pushRecord({
+              kind: "xhr_json",
+              url,
+              method: this.__codexProbeMethod || "GET",
+              status: this.status,
+              payload: originalJsonParse(rawText),
+            });
+          }
+        } catch {
+          // keep the raw-network capture path as primary
+        }
+      });
+      return originalSend.apply(this, rest);
+    };
+
+    if (typeof globalObject.fetch === "function") {
+      const originalFetch = globalObject.fetch.bind(globalObject);
+      globalObject.fetch = async function patchedFetch(...args) {
+        const response = await originalFetch(...args);
+        try {
+          const url = normalize(response.url) || normalize(args[0]?.url || args[0]);
+          rememberUrl(url);
+          response
+            .clone()
+            .json()
+            .then((payload) => {
+              pushRecord({
+                kind: "fetch_json",
+                url,
+                method: normalize(args[1]?.method) || "GET",
+                status: response.status,
+                payload,
+              });
+            })
+            .catch(() => undefined);
+        } catch {
+          // ignore probe errors
+        }
+        return response;
+      };
+    }
+  }, { institutionHints: INSTITUTION_HINT_TEXT });
+}
+
+function buildDecodedMarker(url, kind) {
+  const detected = detectMarker(url);
+  if (detected) {
+    return detected;
+  }
+  return {
+    marker: `page_decoded_${cleanFileToken(kind || "runtime")}`,
+    rank: 98,
+    kind: "decoded",
+  };
+}
+
+function recordDecodedRuntimeEntry(runtime, decodedRecord) {
+  const bodyText = String(decodedRecord.bodyText || "").trim();
+  if (!bodyText) {
+    return;
+  }
+  const parsedJson = tryParseJson(bodyText);
+  if (!parsedJson) {
+    return;
+  }
+
+  const url = String(decodedRecord.url || runtime.pageUrl || "");
+  const marker = buildDecodedMarker(url, decodedRecord.kind);
+  const extractedNames = extractInstitutionNames(parsedJson);
+  const usefulByContent =
+    containsOrgKeywords(bodyText) ||
+    extractedNames.length > 0 ||
+    /daycare|childcare|records|pageNo|pageSize|name|address|latitude|longitude|institution|org/i.test(bodyText);
+  if (!usefulByContent && marker.kind === "decoded") {
+    return;
+  }
+
+  const noiseTag = url ? detectNoise(url) : "";
+  const dedupKey = `decoded|${url}|${sha1(bodyText)}`;
+  if (runtime.savedDedupKeys.has(dedupKey)) {
+    return;
+  }
+  runtime.savedDedupKeys.add(dedupKey);
+
+  const info = {
+    requestId: `page_runtime_${runtime.captureSequence + 1}`,
+    url,
+    method: decodedRecord.method || "GET",
+    resourceType: "page-runtime",
+    marker,
+    noiseTag,
+    requestHeaders: {},
+    responseHeaders: {},
+    status: Number(decodedRecord.status || 200),
+    contentType: "application/json; charset=utf-8",
+    decodedFrom: decodedRecord.kind || "page_runtime",
+  };
+  const savedPath = buildResponseFilePath(runtime, marker.marker, bodyText, ".json");
+  fs.writeFileSync(savedPath, bodyText, "utf8");
+  recordSavedEntry(runtime, info, savedPath, bodyText, ".json");
+}
+
+async function harvestDecodedRuntimeEntries(page, runtime) {
+  const records = await page
+    .evaluate(() => {
+      const pull = globalThis.__codexProbePull;
+      return typeof pull === "function" ? pull() : [];
+    })
+    .catch(() => []);
+  for (const record of records) {
+    recordDecodedRuntimeEntry(runtime, record);
+  }
 }
 
 async function waitForListReady(page, runtime) {
@@ -835,7 +1141,7 @@ async function selectCardTarget(page, preferredNames) {
       );
       const picked = candidates[0];
       if (!picked || !picked.target) {
-        return { clicked: false, reason: "no_candidate" };
+        return { clicked: false, reason: "no_candidate", candidateCount: candidates.length };
       }
 
       picked.target.setAttribute("data-codex-probe-target", "1");
@@ -845,6 +1151,7 @@ async function selectCardTarget(page, preferredNames) {
         reason: picked.matchedPreferred ? "matched_preferred_name" : "heuristic_candidate",
         text: picked.text,
         matchedPreferred: picked.matchedPreferred,
+        candidateCount: candidates.length,
       };
     },
     {
@@ -858,7 +1165,33 @@ async function selectCardTarget(page, preferredNames) {
 
 async function clickInstitutionCard(page, runtime) {
   const preferredNames = runtime.listNameCandidates.slice(0, 10);
-  const selection = await selectCardTarget(page, preferredNames);
+  let selection = await selectCardTarget(page, preferredNames);
+  runtime.candidateCardCount = Math.max(runtime.candidateCardCount, selection.candidateCount || 0);
+  console.log(`[candidate] count=${selection.candidateCount || 0}`);
+
+  if (!selection.clicked) {
+    console.log("[scroll] no clickable institution card yet, retry after one small scroll");
+    await page.evaluate(() => {
+      const root = document.scrollingElement || document.documentElement || document.body;
+      if (root) {
+        root.scrollBy({ top: 280, behavior: "auto" });
+      } else {
+        window.scrollBy(0, 280);
+      }
+    }).catch(() => undefined);
+    await page.mouse.wheel(0, 320).catch(() => undefined);
+    await delay(700);
+    const retrySelection = await selectCardTarget(page, preferredNames);
+    runtime.candidateCardCount = Math.max(runtime.candidateCardCount, retrySelection.candidateCount || 0);
+    console.log(`[candidate] retry_count=${retrySelection.candidateCount || 0}`);
+    if (retrySelection.clicked) {
+      selection = {
+        ...retrySelection,
+        reason: retrySelection.reason === "matched_preferred_name" ? "matched_preferred_name_after_scroll" : "heuristic_candidate_after_scroll",
+      };
+    }
+  }
+
   runtime.clickedCard = selection.clicked
     ? {
         clicked_at: new Date().toISOString(),
@@ -902,6 +1235,7 @@ async function waitForPostClickCapture(runtime) {
     }
     await delay(500);
   }
+  runtime.waitedAfterClickMs = Date.now() - started;
 }
 
 function buildRequestInfo(runtime, event) {
@@ -1033,6 +1367,9 @@ function buildSummary(runtime) {
   const jsonEntries = runtime.savedEntries.filter(
     (entry) => entry.body_readable && entry.extension === ".json" && entry.parseable_json && !entry.noise,
   );
+  const savedResponseCount = runtime.savedEntries.filter((entry) => entry.body_readable).length;
+  const noiseResponseCount = runtime.savedEntries.filter((entry) => entry.noise).length;
+  const parseableJsonCount = runtime.savedEntries.filter((entry) => entry.parseable_json).length;
   const listCount = runtime.savedEntries.filter(
     (entry) =>
       entry.body_readable &&
@@ -1059,10 +1396,19 @@ function buildSummary(runtime) {
     source_id: runtime.options.sourceId,
     target_url: runtime.options.targetUrl,
     mode: runtime.options.mode,
-    captured_count: runtime.savedEntries.filter((entry) => entry.body_readable).length,
+    page_url: runtime.pageUrl,
+    did_reload: runtime.didReload,
+    captured_count: savedResponseCount,
     json_count: jsonEntries.length,
     detail_count: detailCount,
     list_count: listCount,
+    candidate_card_count: runtime.candidateCardCount,
+    clicked_card_text: runtime.clickedCard?.text || "",
+    saved_response_count: savedResponseCount,
+    noise_response_count: noiseResponseCount,
+    parseable_json_count: parseableJsonCount,
+    waited_after_reload_ms: runtime.waitedAfterReloadMs,
+    waited_after_click_ms: runtime.waitedAfterClickMs,
     recommended_json_for_import: recommended.filePath,
     recommended_reason: recommended.reason,
     started_at: runtime.startedAt,
@@ -1082,7 +1428,15 @@ async function maybeNavigate(page, runtime, reusedPage) {
       if (currentUrl && new URL(currentUrl).host === TARGET_HOST) {
         console.log(`[page] reuse existing target page: ${currentUrl}`);
         await page.bringToFront();
-        return;
+        if (runtime.options.reloadOnAttach) {
+          console.log(`[page] reload attached page: ${currentUrl}`);
+          await page.reload({ waitUntil: "domcontentloaded", timeout: 45000 });
+          runtime.didReload = true;
+          runtime.pageUrl = page.url();
+          return { didReload: true, pageUrl: runtime.pageUrl };
+        }
+        runtime.pageUrl = currentUrl;
+        return { didReload: false, pageUrl: runtime.pageUrl };
       }
     } catch {
       // fall through to explicit goto
@@ -1090,6 +1444,8 @@ async function maybeNavigate(page, runtime, reusedPage) {
   }
   console.log(`[page] goto ${runtime.options.targetUrl}`);
   await page.goto(runtime.options.targetUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
+  runtime.pageUrl = page.url();
+  return { didReload: false, pageUrl: runtime.pageUrl };
 }
 
 async function main() {
@@ -1106,12 +1462,20 @@ async function main() {
   let cdpSession = null;
   try {
     await page.bringToFront().catch(() => undefined);
+    await installPageDecodedProbe(page);
     cdpSession = await setupNetworkCapture(page, context, runtime);
-    await maybeNavigate(page, runtime, reused);
+    const navigationResult = await maybeNavigate(page, runtime, reused);
+    runtime.didReload = Boolean(navigationResult?.didReload);
+    runtime.pageUrl = navigationResult?.pageUrl || page.url();
+    const reloadWaitStarted = Date.now();
     await delay(1500);
     await waitForListReady(page, runtime);
+    await harvestDecodedRuntimeEntries(page, runtime);
+    runtime.waitedAfterReloadMs = runtime.didReload ? Date.now() - reloadWaitStarted : 0;
     await clickInstitutionCard(page, runtime);
     await waitForPostClickCapture(runtime);
+    await harvestDecodedRuntimeEntries(page, runtime);
+    runtime.pageUrl = page.url();
   } finally {
     if (cdpSession) {
       await cdpSession.detach().catch(() => undefined);
@@ -1126,9 +1490,10 @@ async function main() {
   console.log(`[summary] ${runtime.summaryPath}`);
   console.log(`recommended_json_for_import=${summary.recommended_json_for_import || ""}`);
   console.log(`recommended_reason=${summary.recommended_reason}`);
+  process.exit(0);
 }
 
 main().catch((error) => {
   console.error(error.message);
-  process.exitCode = 1;
+  process.exit(1);
 });

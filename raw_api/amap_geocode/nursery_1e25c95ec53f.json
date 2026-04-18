@@ -1,0 +1,74 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "3",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市江宁区胜太东路179号21号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "江宁区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320115",
+      "street": "胜太东路",
+      "number": [],
+      "location": "118.829609,31.949006",
+      "level": "小巷"
+    },
+    {
+      "formatted_address": "江苏省南京市江宁区胜太东路",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "江宁区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320115",
+      "street": "胜太东路",
+      "number": [],
+      "location": "118.830281,31.948673",
+      "level": "道路"
+    },
+    {
+      "formatted_address": "江苏省南京市江宁区胜太东路",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "江宁区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320115",
+      "street": "胜太东路",
+      "number": [],
+      "location": "118.830281,31.948673",
+      "level": "道路"
+    }
+  ]
+}

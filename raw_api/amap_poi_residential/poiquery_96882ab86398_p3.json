@@ -1,0 +1,41 @@
+{
+  "suggestion": {
+    "keywords": [],
+    "cities": []
+  },
+  "count": "47",
+  "infocode": "10000",
+  "pois": [
+    {
+      "parent": [],
+      "distance": [],
+      "keytag": "住宅区",
+      "importance": [],
+      "biz_ext": [],
+      "type": "商务住宅;住宅区;住宅小区",
+      "photos": [],
+      "building": [],
+      "typecode": "120302",
+      "shopinfo": "0",
+      "poiweight": [],
+      "adname": "相城区",
+      "featured_reviews_remake": [],
+      "tel": [],
+      "id": "B0L1YBDB4X",
+      "address": "黄埭镇苏阳路与春丰路交叉口东南240米",
+      "space_num": [],
+      "pname": "江苏省",
+      "biz_type": [],
+      "cityname": "苏州市",
+      "childtype": [],
+      "atag": [],
+      "name": "宏方公寓-北区",
+      "location": "120.568562,31.427591",
+      "shopid": [],
+      "favorite_num": [],
+      "featured_reviews": []
+    }
+  ],
+  "status": "1",
+  "info": "OK"
+}

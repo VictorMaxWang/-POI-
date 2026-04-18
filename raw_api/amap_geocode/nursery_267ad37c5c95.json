@@ -1,0 +1,96 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "4",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市秦淮区龙蟠中路388号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "龙蟠中路",
+      "number": "388号",
+      "location": "118.802168,32.023761",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区龙蟠中路388号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "玄武区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320102",
+      "street": "龙蟠中路",
+      "number": [],
+      "location": "118.805111,32.040666",
+      "level": "门牌号"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区龙蟠中路21号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "玄武区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320102",
+      "street": "龙蟠中路",
+      "number": [],
+      "location": "118.807679,32.054947",
+      "level": "门牌号"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区龙蟠中路403号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "龙蟠中路",
+      "number": [],
+      "location": "118.801492,32.021621",
+      "level": "门牌号"
+    }
+  ]
+}

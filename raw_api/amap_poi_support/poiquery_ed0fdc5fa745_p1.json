@@ -1,0 +1,41 @@
+{
+  "suggestion": {
+    "keywords": [],
+    "cities": []
+  },
+  "count": "1",
+  "infocode": "10000",
+  "pois": [
+    {
+      "parent": [],
+      "distance": [],
+      "keytag": "妇幼医院",
+      "importance": [],
+      "biz_ext": [],
+      "type": "医疗保健服务;综合医院;综合医院",
+      "photos": [],
+      "building": [],
+      "typecode": "090100",
+      "shopinfo": "2",
+      "poiweight": [],
+      "adname": "大丰区",
+      "featured_reviews_remake": [],
+      "tel": [],
+      "id": "B0HRJCOXNY",
+      "address": "高新区裕丰路西侧人民医院东南角",
+      "space_num": [],
+      "pname": "江苏省",
+      "biz_type": [],
+      "cityname": "盐城市",
+      "childtype": [],
+      "atag": [],
+      "name": "大丰区妇幼保健院新院",
+      "location": "120.523269,33.207945",
+      "shopid": [],
+      "favorite_num": [],
+      "featured_reviews": []
+    }
+  ],
+  "status": "1",
+  "info": "OK"
+}

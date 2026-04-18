@@ -1,0 +1,52 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "2",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市秦淮区石杨路101号35幢",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "石杨路",
+      "number": "101号35幢",
+      "location": "118.860000,32.004831",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区石杨路101号5幢",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "石杨路",
+      "number": "101号5幢",
+      "location": "118.862799,32.007872",
+      "level": "门址"
+    }
+  ]
+}

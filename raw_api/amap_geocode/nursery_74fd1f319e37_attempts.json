@@ -1,0 +1,22 @@
+{
+  "nursery_id": "nursery_74fd1f319e37",
+  "city": "南京",
+  "district": "",
+  "institution_name_std": "南京市光华东街幼儿园",
+  "address_std": "南京市秦淮区光华园11号",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "南京市秦淮区光华园11号",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%8D%97%E4%BA%AC%E5%B8%82%E7%A7%A6%E6%B7%AE%E5%8C%BA%E5%85%89%E5%8D%8E%E5%9B%AD11%E5%8F%B7&city=%E5%8D%97%E4%BA%AC",
+      "status": "1",
+      "infocode": "10000",
+      "count": 1
+    }
+  ],
+  "selected_address": "南京市秦淮区光华园11号",
+  "selected_count": 1,
+  "used_fallback": false,
+  "updated_at": "2026-04-18 18:35:02"
+}

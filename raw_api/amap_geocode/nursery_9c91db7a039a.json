@@ -1,0 +1,74 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "3",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市秦淮区龙蟠南路33号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "龙蟠南路",
+      "number": "33号",
+      "location": "118.799080,32.010247",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区龙蟠南路33号31-3",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "龙蟠南路",
+      "number": "33号31-3",
+      "location": "118.797319,32.009425",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区龙蟠南路99号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "龙蟠南路",
+      "number": [],
+      "location": "118.796810,32.006616",
+      "level": "门牌号"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "suggestion": {
+    "keywords": [],
+    "cities": []
+  },
+  "count": "74",
+  "infocode": "10000",
+  "pois": [
+    {
+      "parent": "B02010WV40",
+      "distance": [],
+      "keytag": "住宅区",
+      "importance": [],
+      "biz_ext": [],
+      "type": "商务住宅;住宅区;住宅小区",
+      "photos": [],
+      "building": [],
+      "typecode": "120302",
+      "shopinfo": "0",
+      "poiweight": [],
+      "adname": "海安市",
+      "featured_reviews_remake": [],
+      "tel": [],
+      "id": "B0FFM71EEL",
+      "address": "中心南街与328国道交叉口西北240米",
+      "space_num": [],
+      "pname": "江苏省",
+      "biz_type": [],
+      "cityname": "南通市",
+      "childtype": "602",
+      "atag": [],
+      "name": "国恒南苑3期",
+      "location": "120.325462,32.489411",
+      "shopid": [],
+      "favorite_num": [],
+      "featured_reviews": []
+    }
+  ],
+  "status": "1",
+  "info": "OK"
+}

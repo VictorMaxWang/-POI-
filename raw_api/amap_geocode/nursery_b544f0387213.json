@@ -1,0 +1,30 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "1",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省盐城市射阳县金科未来城",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0515",
+      "city": "盐城市",
+      "district": "射阳县",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320924",
+      "street": [],
+      "number": [],
+      "location": "120.312138,33.765779",
+      "level": "住宅区"
+    }
+  ]
+}

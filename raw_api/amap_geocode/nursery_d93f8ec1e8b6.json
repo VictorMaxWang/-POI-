@@ -1,0 +1,74 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "3",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省盐城市东台市东园路168-12号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0515",
+      "city": "盐城市",
+      "district": "东台市",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320981",
+      "street": "东园路",
+      "number": "168-12号",
+      "location": "120.326851,32.845662",
+      "level": "门址"
+    },
+    {
+      "formatted_address": "江苏省盐城市响水县东园路168号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0515",
+      "city": "盐城市",
+      "district": "响水县",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320921",
+      "street": "东园路",
+      "number": [],
+      "location": "119.585529,34.201083",
+      "level": "门牌号"
+    },
+    {
+      "formatted_address": "江苏省盐城市响水县东园路204-1",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "0515",
+      "city": "盐城市",
+      "district": "响水县",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320921",
+      "street": "东园路",
+      "number": [],
+      "location": "119.577800,34.191273",
+      "level": "门牌号"
+    }
+  ]
+}

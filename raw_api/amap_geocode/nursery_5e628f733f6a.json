@@ -1,0 +1,52 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "2",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市秦淮区汇景北路140号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "汇景北路",
+      "number": [],
+      "location": "118.811203,31.984082",
+      "level": "门牌号"
+    },
+    {
+      "formatted_address": "江苏省南京市秦淮区汇景北路140号",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "秦淮区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320104",
+      "street": "汇景北路",
+      "number": [],
+      "location": "118.812504,31.985296",
+      "level": "门牌号"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "nursery_id": "nursery_c0eb39b1466f",
+  "city": "南京",
+  "district": "",
+  "institution_name_std": "南京美儿乐婴幼儿保育服务有限公司",
+  "address_std": "南京市秦淮区象房村路50号-1",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "南京市秦淮区象房村路50号-1",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%8D%97%E4%BA%AC%E5%B8%82%E7%A7%A6%E6%B7%AE%E5%8C%BA%E8%B1%A1%E6%88%BF%E6%9D%91%E8%B7%AF50%E5%8F%B7-1&city=%E5%8D%97%E4%BA%AC",
+      "status": "0",
+      "infocode": "10021",
+      "count": 0
+    },
+    {
+      "attempt_index": 2,
+      "address": "南京市秦淮区象房村路50号",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%8D%97%E4%BA%AC%E5%B8%82%E7%A7%A6%E6%B7%AE%E5%8C%BA%E8%B1%A1%E6%88%BF%E6%9D%91%E8%B7%AF50%E5%8F%B7&city=%E5%8D%97%E4%BA%AC",
+      "status": "0",
+      "infocode": "10021",
+      "count": 0
+    }
+  ],
+  "selected_address": "南京市秦淮区象房村路50号",
+  "selected_count": 0,
+  "used_fallback": true,
+  "updated_at": "2026-04-18 18:34:59"
+}

@@ -1,0 +1,30 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "1",
+  "geocodes": [
+    {
+      "formatted_address": "江苏省南京市江宁区双龙大道气象学院(公交站)",
+      "country": "中国",
+      "province": "江苏省",
+      "citycode": "025",
+      "city": "南京市",
+      "district": "江宁区",
+      "township": [],
+      "neighborhood": {
+        "name": [],
+        "type": []
+      },
+      "building": {
+        "name": [],
+        "type": []
+      },
+      "adcode": "320115",
+      "street": "双龙大道",
+      "number": [],
+      "location": "118.812824,31.970521",
+      "level": "公交地铁站点"
+    }
+  ]
+}

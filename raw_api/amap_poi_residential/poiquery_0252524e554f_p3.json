@@ -1,0 +1,41 @@
+{
+  "suggestion": {
+    "keywords": [],
+    "cities": []
+  },
+  "count": "47",
+  "infocode": "10000",
+  "pois": [
+    {
+      "parent": [],
+      "distance": [],
+      "keytag": "住宅区",
+      "importance": [],
+      "biz_ext": [],
+      "type": "商务住宅;商务住宅相关;商务住宅相关",
+      "photos": [],
+      "building": [],
+      "typecode": "120000",
+      "shopinfo": "0",
+      "poiweight": [],
+      "adname": "如皋市",
+      "featured_reviews_remake": [],
+      "tel": [],
+      "id": "B0J6MMFOCQ",
+      "address": "如城街道丞相大道与紫光路交叉口西",
+      "space_num": [],
+      "pname": "江苏省",
+      "biz_type": [],
+      "cityname": "南通市",
+      "childtype": [],
+      "atag": [],
+      "name": "如皋青年人才公寓国际社区(建设中)",
+      "location": "120.616982,32.360114",
+      "shopid": [],
+      "favorite_num": [],
+      "featured_reviews": []
+    }
+  ],
+  "status": "1",
+  "info": "OK"
+}

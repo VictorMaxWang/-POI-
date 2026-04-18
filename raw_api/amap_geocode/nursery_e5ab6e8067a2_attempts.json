@@ -1,0 +1,22 @@
+{
+  "nursery_id": "nursery_e5ab6e8067a2",
+  "city": "南京",
+  "district": "",
+  "institution_name_std": "南京市七韵幼儿园",
+  "address_std": "秦淮区石杨路116号住建大厦3栋",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "秦淮区石杨路116号住建大厦3栋",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E7%A7%A6%E6%B7%AE%E5%8C%BA%E7%9F%B3%E6%9D%A8%E8%B7%AF116%E5%8F%B7%E4%BD%8F%E5%BB%BA%E5%A4%A7%E5%8E%A63%E6%A0%8B&city=%E5%8D%97%E4%BA%AC",
+      "status": "1",
+      "infocode": "10000",
+      "count": 1
+    }
+  ],
+  "selected_address": "秦淮区石杨路116号住建大厦3栋",
+  "selected_count": 1,
+  "used_fallback": false,
+  "updated_at": "2026-04-18 18:35:00"
+}

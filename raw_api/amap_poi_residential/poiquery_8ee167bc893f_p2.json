@@ -1,0 +1,40 @@
+{
+  "suggestion": {
+    "keywords": [],
+    "cities": []
+  },
+  "count": "0",
+  "infocode": "10000",
+  "pois": [
+    {
+      "parent": [],
+      "distance": "0",
+      "keytag": [],
+      "importance": [],
+      "biz_ext": [],
+      "type": [],
+      "photos": [],
+      "building": [],
+      "typecode": [],
+      "shopinfo": [],
+      "poiweight": [],
+      "adname": [],
+      "featured_reviews_remake": [],
+      "tel": [],
+      "address": "盐南高新区",
+      "space_num": [],
+      "pname": [],
+      "biz_type": [],
+      "cityname": [],
+      "childtype": [],
+      "atag": [],
+      "name": "江苏省盐城市盐都区盐南高新区",
+      "location": "120.163704,33.340418",
+      "shopid": [],
+      "favorite_num": [],
+      "featured_reviews": []
+    }
+  ],
+  "status": "1",
+  "info": "OK"
+}

@@ -1,0 +1,30 @@
+{
+  "nursery_id": "nursery_b544f0387213",
+  "city": "盐城",
+  "district": "射阳县",
+  "institution_name_std": "射阳县小荧星托育中心有限公司",
+  "address_std": "射阳县金科未来城小区 1 号楼 102 、 103 室",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "射阳县金科未来城小区 1 号楼 102 、 103 室",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%B0%84%E9%98%B3%E5%8E%BF%E9%87%91%E7%A7%91%E6%9C%AA%E6%9D%A5%E5%9F%8E%E5%B0%8F%E5%8C%BA+1+%E5%8F%B7%E6%A5%BC+102+%E3%80%81+103+%E5%AE%A4&city=%E7%9B%90%E5%9F%8E",
+      "status": "0",
+      "infocode": "30001",
+      "count": 0
+    },
+    {
+      "attempt_index": 2,
+      "address": "射阳县金科未来城小区1号楼102,103室",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%B0%84%E9%98%B3%E5%8E%BF%E9%87%91%E7%A7%91%E6%9C%AA%E6%9D%A5%E5%9F%8E%E5%B0%8F%E5%8C%BA1%E5%8F%B7%E6%A5%BC102%2C103%E5%AE%A4&city=%E7%9B%90%E5%9F%8E",
+      "status": "1",
+      "infocode": "10000",
+      "count": 1
+    }
+  ],
+  "selected_address": "射阳县金科未来城小区1号楼102,103室",
+  "selected_count": 1,
+  "used_fallback": true,
+  "updated_at": "2026-04-18 18:35:07"
+}

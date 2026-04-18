@@ -1,0 +1,22 @@
+{
+  "nursery_id": "nursery_7de16a643c43",
+  "city": "南京",
+  "district": "",
+  "institution_name_std": "南京天赋育儿园",
+  "address_std": "江宁区秣陵街道铺岗街28号",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "江宁区秣陵街道铺岗街28号",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E6%B1%9F%E5%AE%81%E5%8C%BA%E7%A7%A3%E9%99%B5%E8%A1%97%E9%81%93%E9%93%BA%E5%B2%97%E8%A1%9728%E5%8F%B7&city=%E5%8D%97%E4%BA%AC",
+      "status": "1",
+      "infocode": "10000",
+      "count": 2
+    }
+  ],
+  "selected_address": "江宁区秣陵街道铺岗街28号",
+  "selected_count": 2,
+  "used_fallback": false,
+  "updated_at": "2026-04-18 18:34:58"
+}

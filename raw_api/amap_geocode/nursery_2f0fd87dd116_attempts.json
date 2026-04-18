@@ -1,0 +1,22 @@
+{
+  "nursery_id": "nursery_2f0fd87dd116",
+  "city": "南通",
+  "district": "",
+  "institution_name_std": "南通市海门区锦绣幼儿园",
+  "address_std": "南通市海门区锦绣幼儿园丝绸路349号",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "南通市海门区锦绣幼儿园丝绸路349号",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E5%8D%97%E9%80%9A%E5%B8%82%E6%B5%B7%E9%97%A8%E5%8C%BA%E9%94%A6%E7%BB%A3%E5%B9%BC%E5%84%BF%E5%9B%AD%E4%B8%9D%E7%BB%B8%E8%B7%AF349%E5%8F%B7&city=%E5%8D%97%E9%80%9A",
+      "status": "1",
+      "infocode": "10000",
+      "count": 1
+    }
+  ],
+  "selected_address": "南通市海门区锦绣幼儿园丝绸路349号",
+  "selected_count": 1,
+  "used_fallback": false,
+  "updated_at": "2026-04-18 18:35:05"
+}

@@ -10,3 +10,11 @@ env/
 .env.*
 .DS_Store
 Thumbs.db
+raw_official/registry_probe/**/cdp-profile/
+raw_official/registry_probe/**/persistent-profile/
+raw_official/registry_probe/**/User\ Data/
+raw_official/registry_probe/**/Default/
+raw_official/registry_probe/**/Cache/
+raw_official/registry_probe/**/GPUCache/
+raw_official/registry_probe/**/Local\ State
+raw_official/registry_probe/**/Network/

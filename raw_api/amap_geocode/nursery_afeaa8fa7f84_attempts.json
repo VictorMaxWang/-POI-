@@ -1,0 +1,22 @@
+{
+  "nursery_id": "nursery_afeaa8fa7f84",
+  "city": "南京",
+  "district": "",
+  "institution_name_std": "南京铃兰婴幼儿保育有限公司",
+  "address_std": "江宁区科学园竹山南路潭桥北园商业综合楼二楼",
+  "cached_payload_reused": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "address": "江宁区科学园竹山南路潭桥北园商业综合楼二楼",
+      "request_url": "https://restapi.amap.com/v3/geocode/geo?key=37ed91d9821fee293f31d258016258ec&address=%E6%B1%9F%E5%AE%81%E5%8C%BA%E7%A7%91%E5%AD%A6%E5%9B%AD%E7%AB%B9%E5%B1%B1%E5%8D%97%E8%B7%AF%E6%BD%AD%E6%A1%A5%E5%8C%97%E5%9B%AD%E5%95%86%E4%B8%9A%E7%BB%BC%E5%90%88%E6%A5%BC%E4%BA%8C%E6%A5%BC&city=%E5%8D%97%E4%BA%AC",
+      "status": "1",
+      "infocode": "10000",
+      "count": 2
+    }
+  ],
+  "selected_address": "江宁区科学园竹山南路潭桥北园商业综合楼二楼",
+  "selected_count": 2,
+  "used_fallback": false,
+  "updated_at": "2026-04-18 18:34:59"
+}
