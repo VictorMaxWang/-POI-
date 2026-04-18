@@ -44,10 +44,12 @@ BLOCK_MARKERS = [
     "request has been blocked",
     "wafblock",
     "验证码",
-    "verify you are human",
     "访问异常",
     "禁止访问",
+    "verify you are human",
 ]
+
+BLOCKER_SECTION_ORDER = ["苏州", "南通", "南京", "盐城", "ALL", "未分类"]
 
 
 def now_ts() -> str:
@@ -122,29 +124,41 @@ def slugify(text_value: str) -> str:
 
 
 def normalize_whitespace(text_value: str) -> str:
-    text_value = text_value.replace("\u3000", " ")
+    text_value = stringify(text_value).replace("\u3000", " ")
     return re.sub(r"\s+", " ", text_value).strip()
 
 
 def normalize_name(name: str) -> str:
     text_value = normalize_whitespace(name)
-    text_value = text_value.replace("（", "(").replace("）", ")")
-    return text_value
+    return (
+        text_value.replace("（", "(")
+        .replace("）", ")")
+        .replace("【", "[")
+        .replace("】", "]")
+    )
 
 
 def normalize_address(address: str) -> str:
     text_value = normalize_whitespace(address)
-    return text_value.replace("（", "(").replace("）", ")")
+    return (
+        text_value.replace("（", "(")
+        .replace("）", ")")
+        .replace("，", ",")
+        .replace("；", ";")
+    )
 
 
 def normalize_flag(value: str) -> str:
     text_value = normalize_whitespace(value)
     if not text_value:
         return ""
-    if re.search(r"(是|有|已|true|1|普惠|社区|示范|连锁)", text_value, re.I):
+    lowered = text_value.lower()
+    if lowered in {"1", "true", "yes", "y", "是", "有"}:
         return "1"
-    if re.search(r"(否|无|未|false|0)", text_value, re.I):
+    if lowered in {"0", "false", "no", "n", "否", "无"}:
         return "0"
+    if any(keyword in text_value for keyword in ("普惠", "示范", "社区", "连锁", "备案")):
+        return "1"
     return text_value
 
 
@@ -162,7 +176,11 @@ def extract_visible_text(html_text: str) -> str:
 
 
 def extract_title(html_text: str) -> str:
-    for pattern in (r"(?is)<title>(.*?)</title>", r'(?is)<meta[^>]+ArticleTitle"[^>]+content="(.*?)"'):
+    patterns = (
+        r"(?is)<title>(.*?)</title>",
+        r'(?is)<meta[^>]+ArticleTitle"[^>]+content="(.*?)"',
+    )
+    for pattern in patterns:
         match = re.search(pattern, html_text)
         if match:
             return normalize_whitespace(html.unescape(match.group(1)))
@@ -172,23 +190,19 @@ def extract_title(html_text: str) -> str:
 def extract_links(html_text: str, base_url: str) -> list[dict[str, str]]:
     links = []
     for href, label in re.findall(r'(?is)<a[^>]+href=["\'](.*?)["\'][^>]*>(.*?)</a>', html_text):
-        href = html.unescape(href.strip())
-        absolute = urllib.parse.urljoin(base_url, href)
+        absolute = urllib.parse.urljoin(base_url, html.unescape(href.strip()))
         label_text = normalize_whitespace(extract_visible_text(label))
         links.append({"href": absolute, "label": label_text})
     return links
 
 
 def extract_tables_from_html(html_text: str) -> list[list[list[str]]]:
-    tables = []
+    tables: list[list[list[str]]] = []
     for table_html in re.findall(r"(?is)<table[^>]*>(.*?)</table>", html_text):
-        rows = []
+        rows: list[list[str]] = []
         for row_html in re.findall(r"(?is)<tr[^>]*>(.*?)</tr>", table_html):
             cells = re.findall(r"(?is)<t[dh][^>]*>(.*?)</t[dh]>", row_html)
-            parsed_cells = [
-                normalize_whitespace(extract_visible_text(cell))
-                for cell in cells
-            ]
+            parsed_cells = [normalize_whitespace(extract_visible_text(cell)) for cell in cells]
             if parsed_cells:
                 rows.append(parsed_cells)
         if rows:
@@ -204,6 +218,15 @@ def detect_blocker(content_text: str, http_status: str | int) -> str:
     if stringify(http_status).startswith("4"):
         return f"http_{http_status}"
     return ""
+
+
+def decode_bytes(content: bytes) -> str:
+    for encoding in ("utf-8", "gb18030", "gbk", "latin-1"):
+        try:
+            return content.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    return content.decode("utf-8", errors="ignore")
 
 
 def fetch_url(url: str, referer: str | None = None, timeout: int = 30) -> dict[str, object]:
@@ -256,30 +279,19 @@ def fetch_url(url: str, referer: str | None = None, timeout: int = 30) -> dict[s
                 "blocker_reason": stringify(exc),
             }
 
-    text_sample = decode_bytes(result["content"])
-    blocker_reason = detect_blocker(text_sample, result["http_status"])
-    result["blocker_reason"] = blocker_reason
+    result["blocker_reason"] = detect_blocker(decode_bytes(result["content"]), result["http_status"])
     return result
 
 
-def decode_bytes(content: bytes) -> str:
-    for encoding in ("utf-8", "gb18030", "gbk", "latin-1"):
-        try:
-            return content.decode(encoding)
-        except UnicodeDecodeError:
-            continue
-    return content.decode("utf-8", errors="ignore")
-
-
 def guess_extension(content_type: str, url: str) -> str:
-    content_type = (content_type or "").lower()
-    if "pdf" in content_type or url.lower().endswith(".pdf"):
+    lowered = (content_type or "").lower()
+    if "pdf" in lowered or url.lower().endswith(".pdf"):
         return ".pdf"
-    if "json" in content_type or url.lower().endswith(".json"):
+    if "json" in lowered or url.lower().endswith(".json"):
         return ".json"
-    if "html" in content_type or ".shtml" in url.lower() or ".html" in url.lower():
+    if "html" in lowered or ".shtml" in url.lower() or ".html" in url.lower():
         return ".html"
-    if "text" in content_type:
+    if "text" in lowered:
         return ".txt"
     return Path(urllib.parse.urlparse(url).path).suffix or ".bin"
 
@@ -315,49 +327,114 @@ def log_fetch(stage: str, source_row: dict[str, str], result: dict[str, object],
     )
 
 
-def append_blocker(stage: str, source_row: dict[str, str], reason: str, manual_action: str) -> None:
+def ensure_blockers_file() -> Path:
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     blockers_path = LOGS_DIR / "blockers.md"
-    if not blockers_path.exists():
-        blockers_path.write_text(
-            "# blockers\n\n"
-            "记录无法稳定自动采集的来源、阻塞原因和人工补录建议。\n\n",
-            encoding="utf-8",
-        )
-    section = (
-        f"## {now_ts()} | {stage} | {source_row.get('source_id', '')}\n"
-        f"- city: {source_row.get('city', '')}\n"
+    if blockers_path.exists():
+        return blockers_path
+
+    lines = [
+        "# blockers",
+        "",
+        "记录无法稳定自动采集的来源、阻塞原因和人工补录建议。按城市归档，便于逐城清理。",
+        "",
+    ]
+    for city in BLOCKER_SECTION_ORDER:
+        lines.extend([f"## {city}", ""])
+    blockers_path.write_text("\n".join(lines), encoding="utf-8")
+    return blockers_path
+
+
+def insert_markdown_under_city_heading(content: str, city: str, block: str) -> str:
+    heading = f"## {city}"
+    if heading not in content:
+        if not content.endswith("\n"):
+            content += "\n"
+        return content + f"\n{heading}\n\n{block}"
+
+    start = content.index(heading)
+    heading_line_end = content.find("\n", start)
+    if heading_line_end == -1:
+        heading_line_end = len(content)
+    next_heading = content.find("\n## ", heading_line_end + 1)
+    insert_at = next_heading + 1 if next_heading != -1 else len(content)
+    if not block.endswith("\n"):
+        block += "\n"
+    return content[:insert_at] + block + content[insert_at:]
+
+
+def append_blocker(stage: str, source_row: dict[str, str], reason: str, manual_action: str) -> None:
+    blockers_path = ensure_blockers_file()
+    city = source_row.get("city", "") or "未分类"
+    block = (
+        f"### {now_ts()} | {stage} | {source_row.get('source_id', '')}\n"
+        f"- source_id: {source_row.get('source_id', '')}\n"
+        f"- page_role: {source_row.get('page_role', '')}\n"
         f"- url: {source_row.get('url_or_page_name', '')}\n"
         f"- reason: {reason}\n"
-        f"- manual_action: {manual_action}\n\n"
+        f"- last_seen: {now_ts()}\n"
+        f"- next_action: {manual_action}\n"
+        f"- resolved_flag: 0\n\n"
     )
-    with blockers_path.open("a", encoding="utf-8") as fh:
-        fh.write(section)
+    content = blockers_path.read_text(encoding="utf-8")
+    blockers_path.write_text(insert_markdown_under_city_heading(content, city, block), encoding="utf-8")
 
 
-def seed_manual_capture_row(source_row: dict[str, str], remark: str) -> None:
+def seed_manual_capture_row(
+    source_row: dict[str, str],
+    remark: str,
+    *,
+    district: str = "",
+    source_page: str = "",
+    evidence_title: str = "",
+    capture_status: str = "TODO",
+) -> None:
     ensure_standard_files()
     existing = read_csv_rows(DOCS_DIR / "manual_capture_template.csv")
-    already = {
-        (row.get("source_id", ""), row.get("city", ""), row.get("remark", ""))
+    key = (
+        source_row.get("source_id", ""),
+        source_row.get("city", ""),
+        district,
+        source_row.get("page_role", ""),
+        source_page or source_row.get("url_or_page_name", ""),
+        remark,
+    )
+    seen = {
+        (
+            row.get("source_id", ""),
+            row.get("city", ""),
+            row.get("district", ""),
+            row.get("page_role", ""),
+            row.get("source_page", ""),
+            row.get("remark", ""),
+        )
         for row in existing
     }
-    key = (source_row.get("source_id", ""), source_row.get("city", ""), remark)
-    if key in already:
+    if key in seen:
         return
+
     append_csv_rows(
         DOCS_DIR / "manual_capture_template.csv",
         MANUAL_CAPTURE_FIELDS,
         [
             {
-                "manual_id": make_hash_id("manual", source_row.get("source_id"), remark),
+                "manual_id": make_hash_id("manual", source_row.get("source_id"), district, remark),
+                "task_batch": f"{source_row.get('city', 'ALL')}_REGISTRY_BOOTSTRAP",
+                "capture_status": capture_status,
                 "city": source_row.get("city", ""),
-                "district": "",
+                "district": district,
                 "source_id": source_row.get("source_id", ""),
-                "source_page": source_row.get("url_or_page_name", ""),
+                "page_role": source_row.get("page_role", ""),
+                "parent_source_id": source_row.get("parent_source_id", ""),
+                "source_page": source_page or source_row.get("url_or_page_name", ""),
+                "evidence_title": evidence_title or source_row.get("source_name", ""),
+                "evidence_url_final": "",
                 "institution_name_raw": "",
                 "address_raw": "",
                 "phone_raw": "",
+                "operator_name_raw": "",
+                "capacity_raw": "",
+                "registry_status_raw": "",
                 "inclusive_flag_raw": "",
                 "demo_flag_raw": "",
                 "capture_person": "",
@@ -380,22 +457,20 @@ def maybe_number(value: str) -> str:
     text_value = normalize_whitespace(value)
     if not text_value:
         return ""
-    text_value = text_value.replace(",", "").replace("，", "")
-    text_value = text_value.rstrip("%")
-    return text_value
+    return text_value.replace(",", "").rstrip("%")
 
 
 def extract_publish_date(html_text: str) -> str:
     patterns = [
         r'PubDate" content="([^"]+)"',
-        r"发布时间[:：]\s*([0-9]{4}-[0-9]{2}-[0-9]{2})",
-        r"发布日期[:：]\s*([0-9]{4}-[0-9]{2}-[0-9]{2})",
+        r"发布时间[:：]?\s*([0-9]{4}-[0-9]{2}-[0-9]{2})",
+        r"发布日期[:：]?\s*([0-9]{4}-[0-9]{2}-[0-9]{2})",
+        r'Maketime" content="([0-9]{4}-[0-9]{2}-[0-9]{2})',
     ]
     for pattern in patterns:
         match = re.search(pattern, html_text)
         if match:
-            value = normalize_whitespace(match.group(1))
-            return value[:10]
+            return normalize_whitespace(match.group(1))[:10]
     return ""
 
 
@@ -421,13 +496,10 @@ def iter_schema_rows() -> list[dict[str, str]]:
 
 def label_text(text_value: str) -> tuple[str, str]:
     text_value = normalize_whitespace(text_value)
-    tags = []
-    details = []
+    tags: list[str] = []
+    details: list[str] = []
     for tag_name, patterns in TEXT_TAG_RULES:
-        hits = []
-        for pattern in patterns:
-            if re.search(pattern, text_value, flags=re.I):
-                hits.append(pattern)
+        hits = [pattern for pattern in patterns if re.search(pattern, text_value, flags=re.I)]
         if hits:
             tags.append(tag_name)
             details.append(f"{tag_name}:{'|'.join(hits)}")
@@ -443,4 +515,3 @@ def fetch_json(url: str, timeout: int = 30) -> dict[str, object]:
         payload = {}
     result["json"] = payload
     return result
-

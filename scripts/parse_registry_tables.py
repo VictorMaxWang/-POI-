@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import json
+import re
 
 from pipeline_common import (
     CLEAN_DIR,
@@ -12,6 +14,7 @@ from pipeline_common import (
     load_manifest,
     make_hash_id,
     normalize_whitespace,
+    read_csv_rows,
     schema_fieldnames,
     select_source_url,
     write_csv_rows,
@@ -20,33 +23,44 @@ from pipeline_common import (
 
 OUTPUT_FIELDS = schema_fieldnames("nursery_registry_raw.csv")
 
+FIELD_KEYWORDS = {
+    "district": ["区县", "县(市、区)", "县（市、区）", "地区", "所在区", "行政区"],
+    "institution_name_raw": ["机构名称", "托育机构名称", "名称", "园名", "机构"],
+    "address_raw": ["地址", "详细地址", "所在地址", "机构地址", "园所地址"],
+    "operator_name_raw": ["举办方", "举办单位", "运营方", "主办方", "主办单位"],
+    "institution_type_raw": ["机构类型", "托育类型", "园所类型"],
+    "registry_status_raw": ["备案状态", "状态", "登记状态"],
+    "inclusive_flag_raw": ["普惠"],
+    "demo_flag_raw": ["示范"],
+    "community_flag_raw": ["社区"],
+    "phone_raw": ["电话", "联系电话", "咨询电话"],
+    "capacity_raw": ["托位", "托位数", "核定托位", "托育位"],
+    "fee_raw": ["收费", "价格", "收费标准", "月费"],
+}
+
 
 def detect_column_indexes(header_cells: list[str]) -> dict[str, int]:
     indexes: dict[str, int] = {}
-    for idx, header in enumerate(header_cells):
-        if ("机构" in header or "名称" in header) and "institution_name_raw" not in indexes:
-            indexes["institution_name_raw"] = idx
-        if "地址" in header and "address_raw" not in indexes:
-            indexes["address_raw"] = idx
-        if ("举办" in header or "主办" in header or "运营" in header) and "operator_name_raw" not in indexes:
-            indexes["operator_name_raw"] = idx
-        if "类型" in header and "institution_type_raw" not in indexes:
-            indexes["institution_type_raw"] = idx
-        if ("备案" in header or "状态" in header) and "registry_status_raw" not in indexes:
-            indexes["registry_status_raw"] = idx
-        if "普惠" in header and "inclusive_flag_raw" not in indexes:
-            indexes["inclusive_flag_raw"] = idx
-        if "示范" in header and "demo_flag_raw" not in indexes:
-            indexes["demo_flag_raw"] = idx
-        if "社区" in header and "community_flag_raw" not in indexes:
-            indexes["community_flag_raw"] = idx
-        if "电话" in header and "phone_raw" not in indexes:
-            indexes["phone_raw"] = idx
-        if "托位" in header and "capacity_raw" not in indexes:
-            indexes["capacity_raw"] = idx
-        if ("收费" in header or "价格" in header) and "fee_raw" not in indexes:
-            indexes["fee_raw"] = idx
+    normalized_headers = [normalize_whitespace(cell) for cell in header_cells]
+    for idx, header in enumerate(normalized_headers):
+        for field_name, keywords in FIELD_KEYWORDS.items():
+            if field_name in indexes:
+                continue
+            if any(keyword in header for keyword in keywords):
+                indexes[field_name] = idx
     return indexes
+
+
+def decode_js_value(raw_value: str) -> str:
+    raw_value = normalize_whitespace(raw_value)
+    if raw_value in {"", "a", "null", "undefined"}:
+        return ""
+    if raw_value.startswith('"') and raw_value.endswith('"'):
+        try:
+            return normalize_whitespace(json.loads(raw_value))
+        except json.JSONDecodeError:
+            return normalize_whitespace(raw_value.strip('"'))
+    return raw_value
 
 
 def build_row(
@@ -69,11 +83,11 @@ def build_row(
     return {
         "raw_row_id": make_hash_id("regraw", source_row["source_id"], row_index, name_value, address_value),
         "city": source_row.get("city", ""),
-        "district": "",
-        "registry_batch_name": title,
+        "district": pick("district"),
+        "registry_batch_name": title or source_row.get("source_name", ""),
         "source_id": source_row.get("source_id", ""),
         "source_url": source_url,
-        "source_publish_date": publish_date,
+        "source_publish_date": publish_date or source_row.get("update_date", "")[:10],
         "institution_name_raw": name_value,
         "address_raw": address_value,
         "operator_name_raw": pick("operator_name_raw"),
@@ -94,11 +108,13 @@ def build_row(
 def parse_source_table(source_row: dict[str, str], html_text: str) -> list[dict[str, str]]:
     if source_row.get("source_type") == "registry_entry":
         return []
+
     tables = extract_tables_from_html(html_text)
     output_rows: list[dict[str, str]] = []
     title = extract_title(html_text)
     publish_date = extract_publish_date(html_text)
     source_url = select_source_url(source_row)
+
     for table in tables:
         if len(table) < 2:
             continue
@@ -106,7 +122,7 @@ def parse_source_table(source_row: dict[str, str], html_text: str) -> list[dict[
         if len(table) > 1:
             header_candidates.append(normalize_whitespace(" ".join(table[1])))
         header_text = " ".join(header_candidates)
-        if "机构" not in header_text and "名称" not in header_text and "托育" not in header_text:
+        if not any(keyword in header_text for keyword in ("机构", "名称", "托育")):
             continue
 
         header_indexes = detect_column_indexes(table[0])
@@ -129,6 +145,78 @@ def parse_source_table(source_row: dict[str, str], html_text: str) -> list[dict[
     return output_rows
 
 
+def parse_nantong_ssr_source(source_row: dict[str, str], html_text: str) -> list[dict[str, str]]:
+    list_match = re.search(r"organList:\[(.*?)]\s*,total:", html_text, flags=re.S)
+    if not list_match:
+        return []
+
+    list_body = list_match.group(1)
+    pattern = re.compile(
+        r'id:"(?P<id>[^"]+)"'
+        r'.{0,800}?organname:"(?P<name>(?:\\.|[^"])*)"'
+        r'.{0,4000}?address:(?P<address>"(?:\\.|[^"])*"|a)'
+        r'.{0,1200}?tel:(?P<tel>"(?:\\.|[^"])*"|a)',
+        flags=re.S,
+    )
+
+    source_url = select_source_url(source_row)
+    publish_date = source_row.get("update_date", "")[:10]
+    batch_name = source_row.get("source_name", "")
+    output_rows: list[dict[str, str]] = []
+    for idx, match in enumerate(pattern.finditer(list_body), start=1):
+        name_value = decode_js_value(f'"{match.group("name")}"')
+        address_value = decode_js_value(match.group("address"))
+        phone_value = decode_js_value(match.group("tel"))
+        if not name_value:
+            continue
+        raw_text_parts = [name_value]
+        if address_value:
+            raw_text_parts.append(address_value)
+        if phone_value:
+            raw_text_parts.append(phone_value)
+        output_rows.append(
+            {
+                "raw_row_id": make_hash_id("regraw", source_row["source_id"], match.group("id"), name_value, address_value),
+                "city": source_row.get("city", ""),
+                "district": "",
+                "registry_batch_name": batch_name,
+                "source_id": source_row.get("source_id", ""),
+                "source_url": source_url,
+                "source_publish_date": publish_date,
+                "institution_name_raw": name_value,
+                "address_raw": address_value,
+                "operator_name_raw": "",
+                "institution_type_raw": "",
+                "registry_status_raw": "",
+                "inclusive_flag_raw": "",
+                "demo_flag_raw": "",
+                "community_flag_raw": "",
+                "phone_raw": phone_value,
+                "capacity_raw": "",
+                "fee_raw": "",
+                "raw_text": " | ".join(raw_text_parts),
+                "parse_status": "parsed_ssr_list",
+                "manual_check_flag": "1" if not address_value else "0",
+            }
+        )
+    return output_rows
+
+
+def parse_source(source_row: dict[str, str], html_text: str) -> list[dict[str, str]]:
+    if source_row.get("source_id") == "NT_REG_ORGAN_SEARCH":
+        return parse_nantong_ssr_source(source_row, html_text)
+    return parse_source_table(source_row, html_text)
+
+
+def preserved_manual_rows() -> list[dict[str, str]]:
+    existing_rows = read_csv_rows(CLEAN_DIR / "nursery_registry_raw.csv")
+    return [
+        row
+        for row in existing_rows
+        if row.get("parse_status", "").startswith("manual_capture_")
+    ]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Parse fetched registry pages into nursery_registry_raw.csv.")
     parser.add_argument("--city", nargs="*", default=[], help="Limit to one or more cities")
@@ -138,14 +226,14 @@ def main() -> None:
     if args.city:
         manifest = [row for row in manifest if row.get("city") in set(args.city)]
 
-    output_rows: list[dict[str, str]] = []
+    output_rows: list[dict[str, str]] = preserved_manual_rows()
     for source_row in manifest:
         html_text = load_html_for_source(source_row["source_id"], RAW_OFFICIAL_DIR / "registry")
         if not html_text:
             continue
-        output_rows.extend(parse_source_table(source_row, html_text))
+        output_rows.extend(parse_source(source_row, html_text))
 
-    deduped = []
+    deduped: list[dict[str, str]] = []
     seen = set()
     for row in output_rows:
         key = row["raw_row_id"]

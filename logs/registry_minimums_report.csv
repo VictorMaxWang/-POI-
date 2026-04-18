@@ -1,0 +1,13 @@
+﻿check_id,scope_type,scope_value,metric_name,metric_value,threshold,pass_flag,note
+check_90c2039ab73d,pipeline,ALL,raw_total_rows,22,>=20,1,
+check_c2900cbb19a6,pipeline,ALL,raw_required_field_ratio,0.9545,>=0.80,1,
+check_2d97b1d5f505,pipeline,ALL,master_total_rows,22,>=4,1,
+check_30083968dd66,pipeline,ALL,master_ready_ratio,0.9545,>=0.70,1,
+check_90ffd1d5917d,city,苏州,raw_city_rows,0,>=1,0,
+check_c112a72704ad,city,苏州,master_city_rows,0,>=1,0,
+check_c6987af58847,city,南通,raw_city_rows,10,>=1,1,
+check_be4319916204,city,南通,master_city_rows,10,>=1,1,
+check_4ef6ad66251f,city,南京,raw_city_rows,0,>=1,0,
+check_e8c10c3916fa,city,南京,master_city_rows,0,>=1,0,
+check_34892b61ddbd,city,盐城,raw_city_rows,12,>=1,1,
+check_009eb1f28761,city,盐城,master_city_rows,12,>=1,1,

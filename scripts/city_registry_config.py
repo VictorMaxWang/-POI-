@@ -1,0 +1,324 @@
+from __future__ import annotations
+
+from copy import deepcopy
+
+
+NANJING_DISTRICT_ENTRY_TASKS = [
+    ("玄武区", "玄武区已审批备案托育机构公示"),
+    ("秦淮区", "秦淮区0-3岁备案托育机构公示"),
+    ("建邺区", "建邺区0-3岁备案托育机构公示"),
+    ("鼓楼区", "鼓楼区备案托育机构公示"),
+    ("栖霞区", "栖霞区已登记备案托育机构公示"),
+    ("雨花台区", "雨花台区备案托育机构公示"),
+    ("江宁区", "江宁区已审批备案托育机构公示"),
+    ("浦口区", "浦口区备案托育机构公示"),
+    ("六合区", "六合区备案托育机构名单公示"),
+    ("溧水区", "溧水区已备案托育机构名单公示"),
+    ("高淳区", "高淳区0-3岁托育机构备案机构名单公示"),
+    ("江北新区", "江北新区备案托育机构名单公示"),
+]
+
+
+REGISTRY_CITY_CONFIG = {
+    "苏州": {
+        "city": "苏州",
+        "city_code": "SZ",
+        "target_table": "nursery_registry_raw",
+        "registry_strategy": "platform_primary_manual_capture",
+        "source_slots": [
+            {
+                "source_id": "SZ_REG_MAP_2024",
+                "source_type": "registry_platform",
+                "source_name": "苏州托育地图",
+                "official_or_platform": "official-linked platform",
+                "url_or_page_name": "https://www.suzhou.gov.cn/szsrmzf/szyw/202406/43d1eaf4085a435582b8deb958eef36e.shtml",
+                "target_fields": "institution name;address;phone;capacity;service scope",
+                "access_method": "manual_app_capture",
+                "page_role": "citywide_platform_primary",
+                "source_status": "confirmed_platform",
+                "parent_source_id": "",
+                "record_granularity": "institution",
+                "priority": "1",
+                "update_date": "2024-06-16",
+                "last_verified_date": "2026-04-18",
+                "notes": "官方报道确认覆盖全市备案机构，实际名录在 App/H5 场景中。",
+                "manual_task_granularity": "institution",
+            },
+        ],
+        "manual_tasks": [
+            {
+                "task_batch": "SZ_REGISTRY_BOOTSTRAP",
+                "source_id": "SZ_REG_MAP_2024",
+                "page_role": "platform_list",
+                "district": "",
+                "source_page": "健康苏州掌上行 App > 苏州托育地图 > 机构列表",
+                "evidence_title": "苏州托育地图机构列表",
+                "remark": "逐机构补录名称、地址；可得时补录电话、托位、服务形式。",
+            },
+            {
+                "task_batch": "SZ_REGISTRY_BOOTSTRAP",
+                "source_id": "SZ_REG_MAP_2024",
+                "page_role": "platform_list",
+                "district": "",
+                "source_page": "苏周到 App > 苏州托育地图 > 机构列表",
+                "evidence_title": "苏周到托育地图机构列表",
+                "remark": "与健康苏州掌上行交叉核对机构列表，避免漏录。",
+            },
+            {
+                "task_batch": "SZ_REGISTRY_BOOTSTRAP",
+                "source_id": "SZ_REG_MAP_2024",
+                "page_role": "platform_detail",
+                "district": "",
+                "source_page": "苏州托育地图 > 机构详情卡",
+                "evidence_title": "苏州托育地图机构详情页",
+                "remark": "详情页优先补录公开电话、托位数、服务方式；无公开字段不补造。",
+            },
+        ],
+    },
+    "南通": {
+        "city": "南通",
+        "city_code": "NT",
+        "target_table": "nursery_registry_raw",
+        "registry_strategy": "platform_primary_ssr_parse",
+        "source_slots": [
+            {
+                "source_id": "NT_REG_PORTAL_2023",
+                "source_type": "registry_platform",
+                "source_name": "南通托育在线引流页",
+                "official_or_platform": "official-linked platform",
+                "url_or_page_name": "https://www.nantong.gov.cn/ntsrmzf/ylfwzx/content/25923065-a8b6-41c4-9b5b-398e22870303.html",
+                "target_fields": "entry page;platform hints",
+                "access_method": "manual_browser_capture",
+                "page_role": "official_entry",
+                "source_status": "confirmed_entry_only",
+                "parent_source_id": "",
+                "record_granularity": "city",
+                "priority": "1",
+                "update_date": "2023-10-18",
+                "last_verified_date": "2026-04-18",
+                "notes": "原官方文章已失效，但仍保留为历史入口与 blocker 证据。",
+                "manual_task_granularity": "page",
+            },
+            {
+                "source_id": "NT_REG_PLATFORM_HOME",
+                "source_type": "registry_platform",
+                "source_name": "南通托育在线首页",
+                "official_or_platform": "platform",
+                "url_or_page_name": "https://www.health-nt.com/",
+                "target_fields": "platform entry",
+                "access_method": "manual_browser_capture",
+                "page_role": "platform_home",
+                "source_status": "confirmed_platform",
+                "parent_source_id": "NT_REG_PORTAL_2023",
+                "record_granularity": "city",
+                "priority": "1",
+                "update_date": "",
+                "last_verified_date": "2026-04-18",
+                "notes": "平台首页可作为后续详情页人工核对入口。",
+                "manual_task_granularity": "page",
+            },
+            {
+                "source_id": "NT_REG_ORGAN_SEARCH",
+                "source_type": "registry_list",
+                "source_name": "南通托育在线机构列表",
+                "official_or_platform": "platform",
+                "url_or_page_name": "https://www.health-nt.com/organ/search",
+                "target_fields": "institution name;address;phone;service scope",
+                "access_method": "html_parse_ssr",
+                "page_role": "organ_search",
+                "source_status": "confirmed_direct",
+                "parent_source_id": "NT_REG_PLATFORM_HOME",
+                "record_granularity": "institution",
+                "priority": "1",
+                "update_date": "",
+                "last_verified_date": "2026-04-18",
+                "notes": "公开 SSR 页面内含机构对象数据，可直解析名称、地址、电话等字段。",
+                "manual_task_granularity": "institution",
+            },
+        ],
+        "manual_tasks": [
+            {
+                "task_batch": "NT_REGISTRY_BOOTSTRAP",
+                "source_id": "NT_REG_ORGAN_SEARCH",
+                "page_role": "organ_search_followup",
+                "district": "",
+                "source_page": "https://www.health-nt.com/organ/search",
+                "evidence_title": "南通托育在线机构列表分页复核",
+                "remark": "优先核对 SSR 解析残缺记录；若详情页字段更完整，可补录 operator、capacity、备案状态。",
+            },
+            {
+                "task_batch": "NT_REGISTRY_BOOTSTRAP",
+                "source_id": "NT_REG_PLATFORM_HOME",
+                "page_role": "organ_detail",
+                "district": "",
+                "source_page": "南通托育在线 > 机构详情页",
+                "evidence_title": "南通托育在线机构详情页",
+                "remark": "用于补录电话缺失、图片公告和无法稳定解析的详情字段。",
+            },
+        ],
+    },
+    "南京": {
+        "city": "南京",
+        "city_code": "NJ",
+        "target_table": "nursery_registry_raw",
+        "registry_strategy": "entry_only_manual_followdown",
+        "source_slots": [
+            {
+                "source_id": "NJ_REG_ENTRY_2023",
+                "source_type": "registry_entry",
+                "source_name": "南京市各区备案托育机构公示地址",
+                "official_or_platform": "official",
+                "url_or_page_name": "https://wjw.nanjing.gov.cn/njswshjhsywyh/202303/t20230303_3842502.html",
+                "target_fields": "district followdown titles",
+                "access_method": "html_parse",
+                "page_role": "citywide_entry",
+                "source_status": "confirmed_entry_only",
+                "parent_source_id": "",
+                "record_granularity": "district",
+                "priority": "1",
+                "update_date": "2023-03-03",
+                "last_verified_date": "2026-04-18",
+                "notes": "已成功落地入口页，但需人工继续下钻到区级真公示页。",
+                "manual_task_granularity": "district",
+            },
+            {
+                "source_id": "NJ_REG_PUHUI_2025B2",
+                "source_type": "registry_list",
+                "source_name": "南京市2025年第二批新增普惠托育服务机构名单公示",
+                "official_or_platform": "official",
+                "url_or_page_name": "https://wjw.nanjing.gov.cn/njswshjhsywyh/202511/t20251111_5686527.html",
+                "target_fields": "institution name;district",
+                "access_method": "html_parse",
+                "page_role": "incremental_notice",
+                "source_status": "blocked",
+                "parent_source_id": "",
+                "record_granularity": "institution",
+                "priority": "2",
+                "update_date": "2025-11-11",
+                "last_verified_date": "2026-04-18",
+                "notes": "当前 404，保留为历史 blocker，不作为当前非空表主路径。",
+                "manual_task_granularity": "institution",
+            },
+            {
+                "source_id": "NJ_REG_APP_MYNJ",
+                "source_type": "registry_platform",
+                "source_name": "我的南京托育服务备案机构页",
+                "official_or_platform": "official-linked platform",
+                "url_or_page_name": "我的南京 App > 托育服务 > 备案机构",
+                "target_fields": "institution name;address;phone",
+                "access_method": "manual_app_capture",
+                "page_role": "app_registry",
+                "source_status": "manual_required",
+                "parent_source_id": "NJ_REG_ENTRY_2023",
+                "record_granularity": "institution",
+                "priority": "1",
+                "update_date": "",
+                "last_verified_date": "2026-04-18",
+                "notes": "无稳定公开 URL，以人工补录为主。",
+                "manual_task_granularity": "institution",
+            },
+            {
+                "source_id": "NJ_REG_WECHAT_JLTY",
+                "source_type": "registry_platform",
+                "source_name": "金陵托育公众号备案机构页",
+                "official_or_platform": "official-linked platform",
+                "url_or_page_name": "金陵托育公众号 > 备案机构名单",
+                "target_fields": "institution name;address;phone",
+                "access_method": "manual_wechat_capture",
+                "page_role": "wechat_registry",
+                "source_status": "manual_required",
+                "parent_source_id": "NJ_REG_ENTRY_2023",
+                "record_granularity": "institution",
+                "priority": "1",
+                "update_date": "",
+                "last_verified_date": "2026-04-18",
+                "notes": "公众号页面作为南京真实机构名单的重要人工补录来源。",
+                "manual_task_granularity": "institution",
+            },
+        ],
+        "manual_tasks": [
+            {
+                "task_batch": "NJ_REGISTRY_BOOTSTRAP",
+                "source_id": "NJ_REG_APP_MYNJ",
+                "page_role": "app_registry",
+                "district": "",
+                "source_page": "我的南京 App > 托育服务 > 备案机构",
+                "evidence_title": "我的南京托育备案机构列表",
+                "remark": "按机构逐条补录，缺地址时不要并入 raw。",
+            },
+            {
+                "task_batch": "NJ_REGISTRY_BOOTSTRAP",
+                "source_id": "NJ_REG_WECHAT_JLTY",
+                "page_role": "wechat_registry",
+                "district": "",
+                "source_page": "金陵托育公众号 > 备案机构名单",
+                "evidence_title": "金陵托育备案机构列表",
+                "remark": "优先补机构名称、地址、电话；无地址只保留任务，不写 raw。",
+            },
+        ]
+        + [
+            {
+                "task_batch": "NJ_REGISTRY_BOOTSTRAP",
+                "source_id": "NJ_REG_ENTRY_2023",
+                "page_role": "district_followdown",
+                "district": district,
+                "source_page": f"南京市各区备案托育机构公示地址 -> {title}",
+                "evidence_title": title,
+                "remark": "先定位真公示页，再逐机构补录；无地址勿入 raw。",
+            }
+            for district, title in NANJING_DISTRICT_ENTRY_TASKS
+        ],
+    },
+    "盐城": {
+        "city": "盐城",
+        "city_code": "YC",
+        "target_table": "nursery_registry_raw",
+        "registry_strategy": "direct_notice_table_parse",
+        "source_slots": [
+            {
+                "source_id": "YC_REG_PUHUI_DEMO_2023",
+                "source_type": "registry_notice",
+                "source_name": "关于2023年市级普惠托育机构和市级示范托育机构名单的公示",
+                "official_or_platform": "official",
+                "url_or_page_name": "https://wsj.yancheng.gov.cn/art/2023/10/31/art_2440_4079737.html",
+                "target_fields": "institution name;address;district;institution type",
+                "access_method": "html_parse",
+                "page_role": "city_notice_table",
+                "source_status": "confirmed_direct",
+                "parent_source_id": "",
+                "record_granularity": "institution",
+                "priority": "1",
+                "update_date": "2023-10-31",
+                "last_verified_date": "2026-04-18",
+                "notes": "盐城当前首条可直解析真实机构名录源，优先用于空表转实表。",
+                "manual_task_granularity": "institution",
+            },
+        ],
+        "manual_tasks": [],
+    },
+}
+
+
+def registry_city_names() -> list[str]:
+    return list(REGISTRY_CITY_CONFIG.keys())
+
+
+def iter_registry_source_slots() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for city_config in REGISTRY_CITY_CONFIG.values():
+        for slot in city_config["source_slots"]:
+            row = deepcopy(slot)
+            row["city"] = city_config["city"]
+            row["target_table"] = city_config["target_table"]
+            rows.append(row)
+    return rows
+
+
+def iter_manual_registry_tasks() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for city_config in REGISTRY_CITY_CONFIG.values():
+        for task in city_config["manual_tasks"]:
+            row = deepcopy(task)
+            row["city"] = city_config["city"]
+            rows.append(row)
+    return rows

@@ -1,1 +1,23 @@
 ﻿nursery_id,city,district,institution_name_std,institution_name_aliases,institution_form,operator_name_std,address_std,source_first_id,source_latest_id,inclusive_flag,community_embedded_flag,kindergarten_integrated_flag,medical_integration_flag,delayed_tempcare_flag,price_transparent_flag,teacher_emphasis_flag,chain_brand_flag,registry_evidence_count,geo_status,text_status,review_status
+nursery_3ce61d206e4e,南通,,如皋市爱贝艺术培训有限公司,,,,如皋市东方花园二期586号,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_789eca02702e,南通,,海安高新区孙庄幼儿园,,托幼一体/托班,,,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,1,,,,,,1,BLOCKED_ADDRESS_MISSING,PENDING,REVIEW_REQUIRED
+nursery_e426fd191f80,南通,,如皋市七彩阳光儿童成长有限公司,,,,如皋市城南街道御锦馨河城5幢8号商铺,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_889e50f8048b,南通,,贝悠儿幼儿园,,托幼一体/托班,,平潮镇晏园枫庭21幢,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_6ac32b159adb,南通,,南通吉堡倍悠儿托育有限公司,,托育机构,,新世纪大道158号,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_3fc647091ae8,南通,,南通市海门区浦江幼儿园,,托幼一体/托班,,南通市海门区浦江幼儿园北京路北浦江路口,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_4c44a136402a,南通,,南通市海门区长兴幼儿园,,托幼一体/托班,,南通市海门区常乐镇长安路165号,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_2f0fd87dd116,南通,,南通市海门区锦绣幼儿园,,托幼一体/托班,,南通市海门区锦绣幼儿园丝绸路349号,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_4759407a805e,南通,,南通市海门区东洲幼儿园,,托幼一体/托班,,南通市海门区育才路77号,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_3044babd7df6,南通,,南通市海门区临江镇诺迪幼儿园有限公司,,托幼一体/托班,,海门区临江镇洞庭湖路100号,NT_REG_ORGAN_SEARCH,NT_REG_ORGAN_SEARCH,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_e47bdec10fa2,盐城,响水县,响水县响水镇幼儿园,,托幼一体/托班,,响水县响灌路 280 号,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_766f4a2bb81a,盐城,滨海县,滨海县运动宝贝早教中心,,,,滨海县景湖理想城商业楼 C 楼 102.201-205 室,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_d5193e7d501e,盐城,阜宁县,七彩之光托育有限公司,,托育机构,,阜宁县馥桂园 25 栋 S236 、 S237 室,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_b544f0387213,盐城,射阳县,射阳县小荧星托育中心有限公司,,托育机构,,射阳县金科未来城小区 1 号楼 102 、 103 室,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_d4c253b687c0,盐城,建湖县,建湖壹心托育有限公司,,托育机构,,建湖县京城国际 13 号楼 101 室,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_d93f8ec1e8b6,盐城,东台市,东台市东方幼儿园,,托幼一体/托班,,东台市东园路 168-28 号,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_a8aff3fafef4,盐城,大丰区,大丰区大中街道中心幼儿园城南分园,,托幼一体/托班,,大丰区晨风路 2 号,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_a1be3823b325,盐城,盐都区,盐城金域华府托育有限公司,,托育机构,,盐都区盐枕路 2 号,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_57d2d6946713,盐城,亭湖区,盐城市解放路实验学校第三附属幼儿园,,托幼一体/托班,,亭湖区文榭路 9 号,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_3ab6de11e8a6,盐城,经济技术开发区,盐城市松江路幼儿园,,托幼一体/托班,,盐城经济技术开发区松江路 8 号,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,1,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_696067d4628a,盐城,盐南高新区,盐城金睿教育信息咨询有限公司,,,,盐南高新区新都街道晶都悦府 30 号楼 201 、 301 室,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE
+nursery_b9379addc1bc,盐城,盐南高新区,盐城英迪儿教育咨询有限公司,,,,盐南高新区戴庄路 17 号蔚蓝水岸花园 9 幢 201-204 室,YC_REG_PUHUI_DEMO_2023,YC_REG_PUHUI_DEMO_2023,,,,,,,,,1,READY_FOR_GEOCODE,PENDING,READY_FOR_GEOCODE

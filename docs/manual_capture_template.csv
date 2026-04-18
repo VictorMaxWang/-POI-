@@ -1,4 +1,26 @@
-﻿manual_id,city,district,source_id,source_page,institution_name_raw,address_raw,phone_raw,inclusive_flag_raw,demo_flag_raw,capture_person,capture_date,screenshot_path,remark
-manual_343acbbc095a,南京,,NJ_REG_PUHUI_2025B2,https://wjw.nanjing.gov.cn/njswshjhsywyh/202511/t20251111_5686527.html,,,,,,,,,来源阻塞：http_404
-manual_2aad40622650,苏州,,SZ_REG_MAP_2024,https://www.suzhou.gov.cn/szsrmzf/szyw/202406/43d1eaf4085a435582b8deb958eef36e.shtml,,,,,,,,,需人工补录：manual_app_capture
-manual_8f613535fdea,南通,,NT_REG_PORTAL_2023,https://www.nantong.gov.cn/ntsrmzf/ylfwzx/content/25923065-a8b6-41c4-9b5b-398e22870303.html,,,,,,,,,来源阻塞：http_404
+﻿manual_id,task_batch,capture_status,city,district,source_id,page_role,parent_source_id,source_page,evidence_title,evidence_url_final,institution_name_raw,address_raw,phone_raw,operator_name_raw,capacity_raw,registry_status_raw,inclusive_flag_raw,demo_flag_raw,capture_person,capture_date,screenshot_path,remark
+manual_0e8e70ffac34,NJ_REGISTRY_BOOTSTRAP,TODO,南京,,NJ_REG_APP_MYNJ,app_registry,,我的南京 App > 托育服务 > 备案机构,我的南京托育备案机构列表,,,,,,,,,,,,,按机构逐条补录，缺地址时不要并入 raw。
+manual_b854ca2d9e5c,NJ_REGISTRY_BOOTSTRAP,TODO,南京,六合区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 六合区备案托育机构名单公示,六合区备案托育机构名单公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_a32eb2d95575,NJ_REGISTRY_BOOTSTRAP,TODO,南京,建邺区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 建邺区0-3岁备案托育机构公示,建邺区0-3岁备案托育机构公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_1eec2f6195e5,NJ_REGISTRY_BOOTSTRAP,TODO,南京,栖霞区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 栖霞区已登记备案托育机构公示,栖霞区已登记备案托育机构公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_e730ba2bf7ed,NJ_REGISTRY_BOOTSTRAP,TODO,南京,江北新区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 江北新区备案托育机构名单公示,江北新区备案托育机构名单公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_846ead07aa60,NJ_REGISTRY_BOOTSTRAP,TODO,南京,江宁区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 江宁区已审批备案托育机构公示,江宁区已审批备案托育机构公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_7bc6f37fe4ef,NJ_REGISTRY_BOOTSTRAP,TODO,南京,浦口区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 浦口区备案托育机构公示,浦口区备案托育机构公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_72db7ee03f82,NJ_REGISTRY_BOOTSTRAP,TODO,南京,溧水区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 溧水区已备案托育机构名单公示,溧水区已备案托育机构名单公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_b74ecded26dc,NJ_REGISTRY_BOOTSTRAP,TODO,南京,玄武区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 玄武区已审批备案托育机构公示,玄武区已审批备案托育机构公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_8bb21993c012,NJ_REGISTRY_BOOTSTRAP,TODO,南京,秦淮区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 秦淮区0-3岁备案托育机构公示,秦淮区0-3岁备案托育机构公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_87f3e95899fa,NJ_REGISTRY_BOOTSTRAP,TODO,南京,雨花台区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 雨花台区备案托育机构公示,雨花台区备案托育机构公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_b006bbdf93e4,NJ_REGISTRY_BOOTSTRAP,TODO,南京,高淳区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 高淳区0-3岁托育机构备案机构名单公示,高淳区0-3岁托育机构备案机构名单公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_ad1aad98a011,NJ_REGISTRY_BOOTSTRAP,TODO,南京,鼓楼区,NJ_REG_ENTRY_2023,district_followdown,,南京市各区备案托育机构公示地址 -> 鼓楼区备案托育机构公示,鼓楼区备案托育机构公示,,,,,,,,,,,,,先定位真公示页，再逐机构补录；无地址勿入 raw。
+manual_3dbb69eca364,NJ_REGISTRY_BOOTSTRAP,TODO,南京,,NJ_REG_WECHAT_JLTY,wechat_registry,,金陵托育公众号 > 备案机构名单,金陵托育备案机构列表,,,,,,,,,,,,,优先补机构名称、地址、电话；无地址只保留任务，不写 raw。
+manual_44ff4d9a5755,南京_REGISTRY_BOOTSTRAP,TODO,南京,,NJ_REG_APP_MYNJ,app_registry,NJ_REG_ENTRY_2023,我的南京 App > 托育服务 > 备案机构,我的南京托育服务备案机构页,,,,,,,,,,,,,manual_source:manual_app_capture
+manual_c2e4400b7f5b,南京_REGISTRY_BOOTSTRAP,TODO,南京,,NJ_REG_PUHUI_2025B2,incremental_notice,,https://wjw.nanjing.gov.cn/njswshjhsywyh/202511/t20251111_5686527.html,南京市2025年第二批新增普惠托育服务机构名单公示,,,,,,,,,,,,,fetch_blocked:http_404
+manual_c77ec3f9ecb8,南京_REGISTRY_BOOTSTRAP,TODO,南京,,NJ_REG_WECHAT_JLTY,wechat_registry,NJ_REG_ENTRY_2023,金陵托育公众号 > 备案机构名单,金陵托育公众号备案机构页,,,,,,,,,,,,,manual_source:manual_wechat_capture
+manual_bf20ee72f8c3,NT_REGISTRY_BOOTSTRAP,TODO,南通,,NT_REG_ORGAN_SEARCH,organ_search_followup,,https://www.health-nt.com/organ/search,南通托育在线机构列表分页复核,,,,,,,,,,,,,优先核对 SSR 解析残缺记录；若详情页字段更完整，可补录 operator、capacity、备案状态。
+manual_2818f4fdc304,NT_REGISTRY_BOOTSTRAP,TODO,南通,,NT_REG_PLATFORM_HOME,organ_detail,,南通托育在线 > 机构详情页,南通托育在线机构详情页,,,,,,,,,,,,,用于补录电话缺失、图片公告和无法稳定解析的详情字段。
+manual_52d17c195113,南通_REGISTRY_BOOTSTRAP,TODO,南通,,NT_REG_PORTAL_2023,official_entry,,https://www.nantong.gov.cn/ntsrmzf/ylfwzx/content/25923065-a8b6-41c4-9b5b-398e22870303.html,南通托育在线引流页,,,,,,,,,,,,,fetch_blocked:http_404
+manual_06e2cf79ff91,SZ_REGISTRY_BOOTSTRAP,TODO,苏州,,SZ_REG_MAP_2024,platform_detail,,苏州托育地图 > 机构详情卡,苏州托育地图机构详情页,,,,,,,,,,,,,详情页优先补录公开电话、托位数、服务方式；无公开字段不补造。
+manual_a77af291e63d,SZ_REGISTRY_BOOTSTRAP,TODO,苏州,,SZ_REG_MAP_2024,platform_list,,健康苏州掌上行 App > 苏州托育地图 > 机构列表,苏州托育地图机构列表,,,,,,,,,,,,,逐机构补录名称、地址；可得时补录电话、托位、服务形式。
+manual_4077d19436ed,SZ_REGISTRY_BOOTSTRAP,TODO,苏州,,SZ_REG_MAP_2024,platform_list,,苏周到 App > 苏州托育地图 > 机构列表,苏周到托育地图机构列表,,,,,,,,,,,,,与健康苏州掌上行交叉核对机构列表，避免漏录。
+manual_31dfc1f2fa74,苏州_REGISTRY_BOOTSTRAP,TODO,苏州,,SZ_REG_MAP_2024,citywide_platform_primary,,https://www.suzhou.gov.cn/szsrmzf/szyw/202406/43d1eaf4085a435582b8deb958eef36e.shtml,苏州托育地图,,,,,,,,,,,,,manual_capture_required:manual_app_capture
+manual_279871c9f21b,南通_REGISTRY_BOOTSTRAP,TODO,南通,,NT_REG_PLATFORM_HOME,platform_home,NT_REG_PORTAL_2023,https://www.health-nt.com/,南通托育在线首页,,,,,,,,,,,,,manual_capture_required:manual_browser_capture

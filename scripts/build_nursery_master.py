@@ -4,7 +4,6 @@ from collections import defaultdict
 
 from pipeline_common import (
     CLEAN_DIR,
-    load_manifest,
     make_hash_id,
     normalize_address,
     normalize_flag,
@@ -23,8 +22,8 @@ def derive_institution_form(row_group: list[dict[str, str]]) -> str:
         f"{row.get('institution_type_raw', '')} {row.get('raw_text', '')}"
         for row in row_group
     )
-    if "幼儿园" in text or "托班" in text:
-        return "幼儿园托班/托幼一体"
+    if any(keyword in text for keyword in ("托幼一体", "托班", "幼儿园")):
+        return "托幼一体/托班"
     if "社区" in text:
         return "社区托育点"
     if "托儿所" in text:
@@ -35,20 +34,24 @@ def derive_institution_form(row_group: list[dict[str, str]]) -> str:
 
 
 def derive_flag(row_group: list[dict[str, str]], field_name: str, keywords: list[str]) -> str:
-    for row in row_group:
-        raw_value = normalize_flag(row.get(field_name, ""))
-        if raw_value == "1":
-            return "1"
+    if field_name.endswith("_flag_raw"):
+        for row in row_group:
+            raw_value = normalize_flag(row.get(field_name, ""))
+            if raw_value == "1":
+                return "1"
     corpus = " ".join(row.get("raw_text", "") for row in row_group)
-    for keyword in keywords:
-        if keyword in corpus:
-            return "1"
+    if any(keyword in corpus for keyword in keywords):
+        return "1"
     return ""
+
+
+def source_pair(row: dict[str, str]) -> tuple[str, str]:
+    publish_date = row.get("source_publish_date", "") or "9999-99-99"
+    return publish_date, row.get("source_id", "")
 
 
 def main() -> None:
     registry_rows = read_csv_rows(CLEAN_DIR / "nursery_registry_raw.csv")
-    output_rows = []
     grouped: dict[str, list[dict[str, str]]] = defaultdict(list)
 
     for row in registry_rows:
@@ -66,25 +69,32 @@ def main() -> None:
         )
         grouped[key].append(row)
 
-    for key, group_rows in grouped.items():
+    output_rows = []
+    for group_rows in grouped.values():
         sample = group_rows[0]
         name_std = normalize_name(sample.get("institution_name_raw", ""))
         address_std = normalize_address(sample.get("address_raw", ""))
         aliases = sorted(
-            {normalize_name(row.get("institution_name_raw", "")) for row in group_rows if normalize_name(row.get("institution_name_raw", "")) and normalize_name(row.get("institution_name_raw", "")) != name_std}
+            {
+                normalize_name(row.get("institution_name_raw", ""))
+                for row in group_rows
+                if normalize_name(row.get("institution_name_raw", ""))
+                and normalize_name(row.get("institution_name_raw", "")) != name_std
+            }
         )
         operator_names = sorted(
-            {normalize_name(row.get("operator_name_raw", "")) for row in group_rows if normalize_name(row.get("operator_name_raw", ""))}
+            {
+                normalize_name(row.get("operator_name_raw", ""))
+                for row in group_rows
+                if normalize_name(row.get("operator_name_raw", ""))
+            }
         )
+        source_pairs = sorted(source_pair(row) for row in group_rows)
         source_ids = [row.get("source_id", "") for row in group_rows if row.get("source_id")]
-        publish_pairs = sorted(
-            (row.get("source_publish_date", ""), row.get("source_id", ""))
-            for row in group_rows
-        )
-        source_first_id = publish_pairs[0][1] if publish_pairs else (source_ids[0] if source_ids else "")
-        source_latest_id = publish_pairs[-1][1] if publish_pairs else (source_ids[-1] if source_ids else "")
+        source_first_id = source_pairs[0][1] if source_pairs else (source_ids[0] if source_ids else "")
+        source_latest_id = source_pairs[-1][1] if source_pairs else (source_ids[-1] if source_ids else "")
 
-        ready_for_geocode = bool(address_std and name_std)
+        ready_for_geocode = bool(name_std and address_std)
         output_rows.append(
             {
                 "nursery_id": make_hash_id("nursery", sample.get("city", ""), sample.get("district", ""), name_std, address_std),

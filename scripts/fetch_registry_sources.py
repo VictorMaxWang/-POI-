@@ -18,6 +18,14 @@ from pipeline_common import (
 )
 
 
+MANUAL_ACCESS_METHODS = {
+    "manual_app_capture",
+    "manual_browser_capture",
+    "manual_wechat_capture",
+    "whitelist_crawl_or_manual",
+}
+
+
 def iter_registry_sources(cities: set[str], source_ids: set[str]) -> list[dict[str, str]]:
     rows = []
     for row in load_manifest():
@@ -49,14 +57,52 @@ def main() -> None:
 
     for row in sources:
         url = select_source_url(row)
+        access_method = row.get("access_method", "")
         if not url.startswith("http"):
+            if access_method in MANUAL_ACCESS_METHODS:
+                blocked += 1
+                append_blocker(
+                    "registry_fetch",
+                    row,
+                    f"access_method={access_method}",
+                    "该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。",
+                )
+                seed_manual_capture_row(row, f"manual_source:{access_method}")
+                log_fetch(
+                    "registry_fetch",
+                    row,
+                    {
+                        "http_status": "",
+                        "fetch_mode": "",
+                        "content_type": "",
+                        "error": "",
+                        "blocker_reason": f"access_method={access_method}",
+                    },
+                    None,
+                    note=f"manual_source:{access_method}",
+                )
+                continue
+
+            blocked += 1
             append_blocker(
                 "registry_fetch",
                 row,
                 "url_missing_or_non_http",
-                "核对 source_manifest.csv 中的来源地址；如仅有平台名，请人工记录入口路径和截图。",
+                "核对 source_manifest.csv 中的来源地址；如只有平台名称，请补充真实入口页或按人工流程补录。",
             )
-            blocked += 1
+            log_fetch(
+                "registry_fetch",
+                row,
+                {
+                    "http_status": "",
+                    "fetch_mode": "",
+                    "content_type": "",
+                    "error": "",
+                    "blocker_reason": "url_missing_or_non_http",
+                },
+                None,
+                note="blocker:url_missing_or_non_http",
+            )
             continue
 
         result = fetch_url(url, referer=build_referer(url))
@@ -76,38 +122,34 @@ def main() -> None:
             if blocker_reason == "http_404":
                 manual_action = "核对页面是否失效或迁移；保留当前入口页截图，并在同站点人工搜索新链接后补录。"
             elif blocker_reason.startswith("http_403") or "WAF" in blocker_reason:
-                manual_action = "保留阻塞截图；如为 WAF，请更换网络环境后重试，仍失败则人工复制官方名单。"
+                manual_action = "保留阻塞截图；如系 WAF，请更换网络环境重试，仍失败则人工复制官方名单。"
             else:
-                manual_action = "保留阻塞截图并人工补录；如页面结构不稳定，请直接转人工流程。"
-            append_blocker(
-                "registry_fetch",
-                row,
-                blocker_reason,
-                manual_action,
-            )
-            seed_manual_capture_row(row, f"来源阻塞：{blocker_reason}")
+                manual_action = "保留阻塞截图并人工补录；如页面结构不稳定，直接转人工流程。"
+            append_blocker("registry_fetch", row, blocker_reason, manual_action)
+            seed_manual_capture_row(row, f"fetch_blocked:{blocker_reason}")
             note = f"blocker:{blocker_reason}"
-        elif row.get("access_method") in {"manual_app_capture", "manual_browser_capture", "whitelist_crawl_or_manual"}:
+        elif access_method in MANUAL_ACCESS_METHODS:
             blocked += 1
             append_blocker(
                 "registry_fetch",
                 row,
-                f"access_method={row.get('access_method')}",
-                "该来源是 App/H5/白名单人工流程；先抓官方入口页，再人工补录机构明细。",
+                f"access_method={access_method}",
+                "该来源是 App/H5/人工浏览器补录流程；入口页已落盘后，请继续人工逐机构补录明细。",
             )
-            seed_manual_capture_row(row, f"需人工补录：{row.get('access_method')}")
-            note = f"manual_hint:{row.get('access_method')}"
+            seed_manual_capture_row(row, f"manual_capture_required:{access_method}")
+            note = f"manual_hint:{access_method}"
         elif row.get("source_type") == "registry_entry" and html_text:
             links = extract_links(html_text, url)
             if not links:
+                blocked += 1
                 append_blocker(
                     "registry_fetch",
                     row,
                     "entry_page_without_links",
-                    "入口页未识别到稳定子链接；请人工打开页面并补录区级入口。",
+                    "入口页未识别到稳定二级链接；请人工打开页面并补录区级公示页任务。",
                 )
-                blocked += 1
-                seed_manual_capture_row(row, "入口页无稳定二级链接，请人工补录区级页面。")
+                seed_manual_capture_row(row, "entry_page_without_links")
+                note = "entry_links_detected:0"
             else:
                 note = f"entry_links_detected:{len(links)}"
 

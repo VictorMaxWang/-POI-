@@ -3,21 +3,36 @@ source_manifest.csv,source_id,string,Y,唯一来源编号
 source_manifest.csv,city,string,Y,城市名称，ALL 表示跨城市来源
 source_manifest.csv,source_type,string,Y,来源类别，如 census7、registry_platform
 source_manifest.csv,source_name,string,Y,来源中文名称
-source_manifest.csv,official_or_platform,string,Y,official 或 platform 等来源属性
-source_manifest.csv,url_or_page_name,string,Y,可访问 URL 或官方页面名称
+source_manifest.csv,official_or_platform,string,Y,official、platform 或 official-linked platform
+source_manifest.csv,url_or_page_name,string,Y,可访问 URL 或人工页面名称
 source_manifest.csv,target_table,string,Y,目标落表名称
 source_manifest.csv,target_fields,string,N,预计抽取字段
-source_manifest.csv,access_method,string,Y,html_parse、manual_app_capture 等访问方式
+source_manifest.csv,access_method,string,Y,html_parse、html_parse_ssr、manual_app_capture 等访问方式
+source_manifest.csv,page_role,string,N,页面角色，如 citywide_entry、organ_search
+source_manifest.csv,source_status,string,N,来源状态，如 confirmed_direct、manual_required
+source_manifest.csv,parent_source_id,string,N,父级来源编号
+source_manifest.csv,record_granularity,string,N,记录粒度，如 city、district、institution
+source_manifest.csv,priority,string,N,采集优先级，数字越小越优先
 source_manifest.csv,update_date,string,N,来源页面发布日期或更新时间
+source_manifest.csv,last_verified_date,string,N,最近一次人工或自动核验日期
 source_manifest.csv,notes,string,N,补充说明
 manual_capture_template.csv,manual_id,string,Y,人工补录任务编号
+manual_capture_template.csv,task_batch,string,N,任务批次
+manual_capture_template.csv,capture_status,string,Y,任务状态，如 TODO、CAPTURED、VERIFIED
 manual_capture_template.csv,city,string,Y,城市名称
 manual_capture_template.csv,district,string,N,区县名称
 manual_capture_template.csv,source_id,string,Y,来源编号
-manual_capture_template.csv,source_page,string,Y,需要人工查看的页面
+manual_capture_template.csv,page_role,string,N,页面角色
+manual_capture_template.csv,parent_source_id,string,N,父级来源编号
+manual_capture_template.csv,source_page,string,Y,需要人工查看的页面或入口描述
+manual_capture_template.csv,evidence_title,string,N,证据页标题或任务标题
+manual_capture_template.csv,evidence_url_final,string,N,最终核定后的证据 URL
 manual_capture_template.csv,institution_name_raw,string,N,机构原始名称
 manual_capture_template.csv,address_raw,string,N,机构原始地址
 manual_capture_template.csv,phone_raw,string,N,公开电话
+manual_capture_template.csv,operator_name_raw,string,N,举办方或运营方原始名称
+manual_capture_template.csv,capacity_raw,string,N,公开托位
+manual_capture_template.csv,registry_status_raw,string,N,备案状态原始字段
 manual_capture_template.csv,inclusive_flag_raw,string,N,原始普惠标记
 manual_capture_template.csv,demo_flag_raw,string,N,原始示范标记
 manual_capture_template.csv,capture_person,string,N,录入人
@@ -72,7 +87,7 @@ nursery_registry_raw.csv,source_url,string,Y,原始来源 URL
 nursery_registry_raw.csv,source_publish_date,string,N,来源发布日期
 nursery_registry_raw.csv,institution_name_raw,string,N,机构原始名称
 nursery_registry_raw.csv,address_raw,string,N,机构原始地址
-nursery_registry_raw.csv,operator_name_raw,string,N,举办方/运营方原始名称
+nursery_registry_raw.csv,operator_name_raw,string,N,举办方或运营方原始名称
 nursery_registry_raw.csv,institution_type_raw,string,N,机构类型原始字段
 nursery_registry_raw.csv,registry_status_raw,string,N,备案状态原始字段
 nursery_registry_raw.csv,inclusive_flag_raw,string,N,普惠原始标记
@@ -187,3 +202,11 @@ text_tag_suggest.csv,rule_hit_detail,string,N,命中规则详情
 text_tag_suggest.csv,human_tag_final,string,N,人工最终标签
 text_tag_suggest.csv,reviewer,string,N,复核人
 text_tag_suggest.csv,review_date,string,N,复核日期
+registry_minimums_report.csv,check_id,string,Y,校验编号
+registry_minimums_report.csv,scope_type,string,Y,范围类型，如 city 或 pipeline
+registry_minimums_report.csv,scope_value,string,Y,范围值
+registry_minimums_report.csv,metric_name,string,Y,指标名
+registry_minimums_report.csv,metric_value,string,Y,指标值
+registry_minimums_report.csv,threshold,string,N,阈值
+registry_minimums_report.csv,pass_flag,string,Y,是否通过
+registry_minimums_report.csv,note,string,N,补充说明
