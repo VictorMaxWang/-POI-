@@ -51,6 +51,24 @@ def detect_column_indexes(header_cells: list[str]) -> dict[str, int]:
     return indexes
 
 
+def choose_header_indexes(table: list[list[str]]) -> tuple[dict[str, int], int]:
+    best_indexes: dict[str, int] = {}
+    best_start_row = 1
+    best_score = -1
+    for header_idx in range(min(2, len(table))):
+        indexes = detect_column_indexes(table[header_idx])
+        score = len(indexes)
+        if "institution_name_raw" in indexes:
+            score += 2
+        if "address_raw" in indexes:
+            score += 1
+        if score > best_score:
+            best_score = score
+            best_indexes = indexes
+            best_start_row = header_idx + 1
+    return best_indexes, best_start_row
+
+
 def decode_js_value(raw_value: str) -> str:
     raw_value = normalize_whitespace(raw_value)
     if raw_value in {"", "a", "null", "undefined"}:
@@ -61,6 +79,22 @@ def decode_js_value(raw_value: str) -> str:
         except json.JSONDecodeError:
             return normalize_whitespace(raw_value.strip('"'))
     return raw_value
+
+
+def parse_status_for_source(source_row: dict[str, str]) -> str:
+    access_method = source_row.get("access_method", "")
+    source_type = source_row.get("source_type", "")
+    if access_method == "html_snapshot_import":
+        return "parsed_html_snapshot"
+    if access_method == "har_import":
+        return "parsed_har_payload"
+    if access_method == "normalized_attachment":
+        return "parsed_attachment_table"
+    if access_method == "normalized_evidence":
+        return "parsed_normalized_evidence"
+    if source_type in {"registry_attachment", "registry_attachment_table"}:
+        return "parsed_attachment_table"
+    return "parsed_table"
 
 
 def build_row(
@@ -100,7 +134,7 @@ def build_row(
         "capacity_raw": pick("capacity_raw"),
         "fee_raw": pick("fee_raw"),
         "raw_text": " | ".join(row_values),
-        "parse_status": "parsed_table",
+        "parse_status": parse_status_for_source(source_row),
         "manual_check_flag": "1" if not name_value or not address_value else "0",
     }
 
@@ -125,11 +159,7 @@ def parse_source_table(source_row: dict[str, str], html_text: str) -> list[dict[
         if not any(keyword in header_text for keyword in ("机构", "名称", "托育")):
             continue
 
-        header_indexes = detect_column_indexes(table[0])
-        start_row = 1
-        if "institution_name_raw" not in header_indexes and len(table) > 1:
-            header_indexes = detect_column_indexes(table[1])
-            start_row = 2
+        header_indexes, start_row = choose_header_indexes(table)
         if "institution_name_raw" not in header_indexes:
             continue
         if "address_raw" not in header_indexes and source_row.get("source_type") not in {"registry_list"}:
@@ -217,6 +247,24 @@ def preserved_manual_rows() -> list[dict[str, str]]:
     ]
 
 
+def preserved_existing_rows(selected_cities: set[str]) -> list[dict[str, str]]:
+    existing_rows = read_csv_rows(CLEAN_DIR / "nursery_registry_raw.csv")
+    if not selected_cities:
+        return [
+            row
+            for row in existing_rows
+            if row.get("parse_status", "").startswith("manual_capture_")
+        ]
+    preserved = []
+    for row in existing_rows:
+        if row.get("parse_status", "").startswith("manual_capture_"):
+            preserved.append(row)
+            continue
+        if row.get("city", "") not in selected_cities:
+            preserved.append(row)
+    return preserved
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Parse fetched registry pages into nursery_registry_raw.csv.")
     parser.add_argument("--city", nargs="*", default=[], help="Limit to one or more cities")
@@ -226,7 +274,8 @@ def main() -> None:
     if args.city:
         manifest = [row for row in manifest if row.get("city") in set(args.city)]
 
-    output_rows: list[dict[str, str]] = preserved_manual_rows()
+    selected_cities = set(args.city)
+    output_rows: list[dict[str, str]] = preserved_existing_rows(selected_cities)
     for source_row in manifest:
         html_text = load_html_for_source(source_row["source_id"], RAW_OFFICIAL_DIR / "registry")
         if not html_text:

@@ -5,13 +5,28 @@ from pipeline_common import CLEAN_DIR, DOCS_DIR, make_hash_id, read_csv_rows, sc
 
 OUTPUT_FIELDS = schema_fieldnames("nursery_registry_raw.csv")
 SKIP_STATUSES = {"TODO", "BLOCKED", "SKIPPED"}
+LEGACY_EVIDENCE_TYPES = {"legacy_manual_row", "manual_row", "l6_manual_row"}
 
 
 def should_merge(row: dict[str, str]) -> bool:
     has_minimum = bool(row.get("institution_name_raw", "").strip() and row.get("address_raw", "").strip())
     if not has_minimum:
         return False
-    return row.get("capture_status", "").upper() not in SKIP_STATUSES
+    if row.get("capture_status", "").upper() in SKIP_STATUSES:
+        return False
+
+    evidence_type = row.get("evidence_type", "").strip().lower()
+    if evidence_type in LEGACY_EVIDENCE_TYPES:
+        return True
+
+    # Backward compatibility for pre-evidence-template rows that only contain manual fields.
+    if (
+        not evidence_type
+        and not row.get("evidence_file_path", "").strip()
+        and not row.get("evidence_url_final", "").strip()
+    ):
+        return True
+    return False
 
 
 def build_raw_row(row: dict[str, str]) -> dict[str, str]:
@@ -33,7 +48,7 @@ def build_raw_row(row: dict[str, str]) -> dict[str, str]:
         "registry_batch_name": row.get("evidence_title", "") or row.get("task_batch", ""),
         "source_id": row.get("source_id", ""),
         "source_url": source_page,
-        "source_publish_date": row.get("capture_date", ""),
+        "source_publish_date": row.get("captured_at", ""),
         "institution_name_raw": row.get("institution_name_raw", ""),
         "address_raw": row.get("address_raw", ""),
         "operator_name_raw": row.get("operator_name_raw", ""),
@@ -45,7 +60,7 @@ def build_raw_row(row: dict[str, str]) -> dict[str, str]:
         "phone_raw": row.get("phone_raw", ""),
         "capacity_raw": row.get("capacity_raw", ""),
         "fee_raw": "",
-        "raw_text": row.get("remark", ""),
+        "raw_text": row.get("remark", "") or row.get("evidence_title", ""),
         "parse_status": parse_status,
         "manual_check_flag": manual_check_flag,
     }

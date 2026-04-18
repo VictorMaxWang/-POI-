@@ -1,0 +1,82 @@
+﻿probe_time,city,parent_source_id,source_id,district,page_role,probe_stage,query_text,candidate_url,candidate_title,status,decision,note
+2026-04-18 12:21:06,南京,NJ_REG_ENTRY_2023,,玄武区,district_followdown,search,"site:gov.cn ""玄武区已审批备案托育机构公示"" ""玄武区"" 南京",,,started,,南京市玄武区人民政府 网站
+2026-04-18 12:21:17,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_玄武区_GOV,玄武区,district_notice,manifest_upsert,玄武区已审批备案托育机构公示,,,unresolved,seed_manual_capture,南京市玄武区人民政府 网站
+2026-04-18 12:21:18,南京,NJ_REG_ENTRY_2023,,秦淮区,district_followdown,search,"site:gov.cn ""秦淮区0-3岁备案托育机构公示"" ""秦淮区"" 南京",,,started,,南京市秦淮区人民政府 网站
+2026-04-18 12:21:23,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_秦淮区_GOV,秦淮区,district_notice,manifest_upsert,秦淮区0-3岁备案托育机构公示,,,unresolved,seed_manual_capture,南京市秦淮区人民政府 网站
+2026-04-18 12:21:23,南京,NJ_REG_ENTRY_2023,,建邺区,district_followdown,search,"site:mp.weixin.qq.com ""建邺区0-3岁备案托育机构公示"" ""建邺区"" 南京",,,started,,健康建邺微信号
+2026-04-18 12:21:28,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_建邺区_WX,建邺区,district_wechat_notice,manifest_upsert,建邺区0-3岁备案托育机构公示,,,unresolved,seed_manual_capture,健康建邺微信号
+2026-04-18 12:21:28,南京,NJ_REG_ENTRY_2023,,鼓楼区,district_followdown,search,"site:gov.cn ""鼓楼区备案托育机构公示"" ""鼓楼区"" 南京",,,started,,南京市鼓楼区人民政府 网站
+2026-04-18 12:21:32,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_鼓楼区_GOV,鼓楼区,district_notice,manifest_upsert,鼓楼区备案托育机构公示,,,unresolved,seed_manual_capture,南京市鼓楼区人民政府 网站
+2026-04-18 12:21:32,南京,NJ_REG_ENTRY_2023,,栖霞区,district_followdown,search,"site:gov.cn ""栖霞区已登记备案托育机构公示"" ""栖霞区"" 南京",,,started,,南京市栖霞区人民政府网站
+2026-04-18 12:21:34,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_栖霞区_GOV,栖霞区,district_notice,manifest_upsert,栖霞区已登记备案托育机构公示,,,unresolved,seed_manual_capture,南京市栖霞区人民政府网站
+2026-04-18 12:21:34,南京,NJ_REG_ENTRY_2023,,雨花台区,district_followdown,search,"site:gov.cn ""南京市雨花台区备案托育机构公示"" ""雨花台区"" 南京",,,started,,南京市雨花台区人民政府网站
+2026-04-18 12:21:39,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_雨花台区_GOV,雨花台区,district_notice,manifest_upsert,南京市雨花台区备案托育机构公示,,,unresolved,seed_manual_capture,南京市雨花台区人民政府网站
+2026-04-18 12:21:39,南京,NJ_REG_ENTRY_2023,,江宁区,district_followdown,seed_verify,江宁区已审批备案托育机构公示,https://www.jiangning.gov.cn/jnqrmzf/202405/t20240515_4666588.html,江宁区人民政府,found,seed_verified,南京市江宁区人民政府网站
+2026-04-18 12:21:39,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_江宁区_GOV,江宁区,district_notice,manifest_upsert,,https://www.jiangning.gov.cn/jnqrmzf/202405/t20240515_4666588.html,江宁区人民政府,found,upsert_manifest,南京市江宁区人民政府网站
+2026-04-18 12:21:39,南京,NJ_REG_ENTRY_2023,,浦口区,district_followdown,search,"site:gov.cn ""南京市浦口区备案托育机构公示"" ""浦口区"" 南京",,,started,,南京市浦口区人民政府网站
+2026-04-18 12:21:49,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_浦口区_GOV,浦口区,district_notice,manifest_upsert,南京市浦口区备案托育机构公示,,,unresolved,seed_manual_capture,南京市浦口区人民政府网站
+2026-04-18 12:21:49,南京,NJ_REG_ENTRY_2023,,六合区,district_followdown,search,"site:mp.weixin.qq.com ""六合区备案托育机构名单公示"" ""六合区"" 南京",,,started,,健康六合订阅号
+2026-04-18 12:21:55,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_六合区_WX,六合区,district_wechat_notice,manifest_upsert,六合区备案托育机构名单公示,,,unresolved,seed_manual_capture,健康六合订阅号
+2026-04-18 12:21:55,南京,NJ_REG_ENTRY_2023,,溧水区,district_followdown,search,"site:gov.cn ""溧水区已备案托育机构名单公示"" ""溧水区"" 南京",,,started,,南京市溧水区人民政府 网站
+2026-04-18 12:22:00,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_溧水区_GOV,溧水区,district_notice,manifest_upsert,溧水区已备案托育机构名单公示,,,unresolved,seed_manual_capture,南京市溧水区人民政府 网站
+2026-04-18 12:22:00,南京,NJ_REG_ENTRY_2023,,高淳区,district_followdown,search,"site:mp.weixin.qq.com ""高淳区0-3岁托育机构备案托育机构名单公示"" ""高淳区"" 南京",,,started,,健康高淳微信号
+2026-04-18 12:22:05,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_高淳区_WX,高淳区,district_wechat_notice,manifest_upsert,高淳区0-3岁托育机构备案托育机构名单公示,,,unresolved,seed_manual_capture,健康高淳微信号
+2026-04-18 12:22:05,南京,NJ_REG_ENTRY_2023,,江北新区,district_followdown,search,"site:mp.weixin.qq.com ""江北新区备案托育机构名单公示"" ""江北新区"" 南京",,,started,,南京江北新区微信号
+2026-04-18 12:22:10,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_江北新区_WX,江北新区,district_wechat_notice,manifest_upsert,江北新区备案托育机构名单公示,,,unresolved,seed_manual_capture,南京江北新区微信号
+2026-04-18 12:23:29,南京,NJ_REG_ENTRY_2023,,玄武区,district_followdown,search,"site:gov.cn ""玄武区已审批备案托育机构公示"" ""玄武区"" 南京",,,started,,南京市玄武区人民政府 网站
+2026-04-18 12:23:33,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_玄武区_GOV,玄武区,district_notice,manifest_upsert,玄武区已审批备案托育机构公示,,,unresolved,seed_manual_capture,南京市玄武区人民政府 网站
+2026-04-18 12:23:34,南京,NJ_REG_ENTRY_2023,,秦淮区,district_followdown,seed_verify,秦淮区0-3岁备案托育机构公示,https://www.njqh.gov.cn/qhqrmzf/202507/t20250711_5605267.html,南京市秦淮区人民政府,found,seed_verified,南京市秦淮区人民政府 网站
+2026-04-18 12:23:34,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_秦淮区_GOV,秦淮区,district_notice,manifest_upsert,,https://www.njqh.gov.cn/qhqrmzf/202507/t20250711_5605267.html,南京市秦淮区人民政府,found,upsert_manifest,南京市秦淮区人民政府 网站
+2026-04-18 12:23:34,南京,NJ_REG_ENTRY_2023,,建邺区,district_followdown,search,"site:mp.weixin.qq.com ""建邺区0-3岁备案托育机构公示"" ""建邺区"" 南京",,,started,,健康建邺微信号
+2026-04-18 12:23:39,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_建邺区_WX,建邺区,district_wechat_notice,manifest_upsert,建邺区0-3岁备案托育机构公示,,,unresolved,seed_manual_capture,健康建邺微信号
+2026-04-18 12:23:39,南京,NJ_REG_ENTRY_2023,,鼓楼区,district_followdown,search,"site:gov.cn ""鼓楼区备案托育机构公示"" ""鼓楼区"" 南京",,,started,,南京市鼓楼区人民政府 网站
+2026-04-18 12:23:43,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_鼓楼区_GOV,鼓楼区,district_notice,manifest_upsert,鼓楼区备案托育机构公示,,,unresolved,seed_manual_capture,南京市鼓楼区人民政府 网站
+2026-04-18 12:23:43,南京,NJ_REG_ENTRY_2023,,栖霞区,district_followdown,search,"site:gov.cn ""栖霞区已登记备案托育机构公示"" ""栖霞区"" 南京",,,started,,南京市栖霞区人民政府网站
+2026-04-18 12:23:45,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_栖霞区_GOV,栖霞区,district_notice,manifest_upsert,栖霞区已登记备案托育机构公示,,,unresolved,seed_manual_capture,南京市栖霞区人民政府网站
+2026-04-18 12:23:45,南京,NJ_REG_ENTRY_2023,,雨花台区,district_followdown,search,"site:gov.cn ""南京市雨花台区备案托育机构公示"" ""雨花台区"" 南京",,,started,,南京市雨花台区人民政府网站
+2026-04-18 12:23:50,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_雨花台区_GOV,雨花台区,district_notice,manifest_upsert,南京市雨花台区备案托育机构公示,,,unresolved,seed_manual_capture,南京市雨花台区人民政府网站
+2026-04-18 12:23:53,南京,NJ_REG_ENTRY_2023,,江宁区,district_followdown,seed_verify,江宁区已审批备案托育机构公示,https://www.jiangning.gov.cn/jnqrmzf/202405/t20240515_4666588.html,江宁区人民政府,found,seed_verified,南京市江宁区人民政府网站
+2026-04-18 12:23:53,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_江宁区_GOV,江宁区,district_notice,manifest_upsert,,https://www.jiangning.gov.cn/jnqrmzf/202405/t20240515_4666588.html,江宁区人民政府,found,upsert_manifest,南京市江宁区人民政府网站
+2026-04-18 12:23:53,南京,NJ_REG_ENTRY_2023,,浦口区,district_followdown,search,"site:gov.cn ""南京市浦口区备案托育机构公示"" ""浦口区"" 南京",,,started,,南京市浦口区人民政府网站
+2026-04-18 12:23:58,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_浦口区_GOV,浦口区,district_notice,manifest_upsert,南京市浦口区备案托育机构公示,,,unresolved,seed_manual_capture,南京市浦口区人民政府网站
+2026-04-18 12:23:58,南京,NJ_REG_ENTRY_2023,,六合区,district_followdown,search,"site:mp.weixin.qq.com ""六合区备案托育机构名单公示"" ""六合区"" 南京",,,started,,健康六合订阅号
+2026-04-18 12:24:04,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_六合区_WX,六合区,district_wechat_notice,manifest_upsert,六合区备案托育机构名单公示,,,unresolved,seed_manual_capture,健康六合订阅号
+2026-04-18 12:24:04,南京,NJ_REG_ENTRY_2023,,溧水区,district_followdown,search,"site:gov.cn ""溧水区已备案托育机构名单公示"" ""溧水区"" 南京",,,started,,南京市溧水区人民政府 网站
+2026-04-18 12:24:09,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_溧水区_GOV,溧水区,district_notice,manifest_upsert,溧水区已备案托育机构名单公示,,,unresolved,seed_manual_capture,南京市溧水区人民政府 网站
+2026-04-18 12:24:09,南京,NJ_REG_ENTRY_2023,,高淳区,district_followdown,search,"site:mp.weixin.qq.com ""高淳区0-3岁托育机构备案托育机构名单公示"" ""高淳区"" 南京",,,started,,健康高淳微信号
+2026-04-18 12:24:15,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_高淳区_WX,高淳区,district_wechat_notice,manifest_upsert,高淳区0-3岁托育机构备案托育机构名单公示,,,unresolved,seed_manual_capture,健康高淳微信号
+2026-04-18 12:24:15,南京,NJ_REG_ENTRY_2023,,江北新区,district_followdown,search,"site:mp.weixin.qq.com ""江北新区备案托育机构名单公示"" ""江北新区"" 南京",,,started,,南京江北新区微信号
+2026-04-18 12:24:22,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_江北新区_WX,江北新区,district_wechat_notice,manifest_upsert,江北新区备案托育机构名单公示,,,unresolved,seed_manual_capture,南京江北新区微信号
+2026-04-18 12:25:21,南京,NJ_REG_ENTRY_2023,,玄武区,district_followdown,search,"site:gov.cn ""玄武区已审批备案托育机构公示"" ""玄武区"" 南京",,,started,,南京市玄武区人民政府 网站
+2026-04-18 12:25:24,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_玄武区_GOV,玄武区,district_notice,manifest_upsert,玄武区已审批备案托育机构公示,,,unresolved,seed_manual_capture,南京市玄武区人民政府 网站
+2026-04-18 12:25:27,南京,NJ_REG_ENTRY_2023,,秦淮区,district_followdown,seed_verify,秦淮区0-3岁备案托育机构公示,https://www.njqh.gov.cn/qhqrmzf/202507/t20250711_5605267.html,南京市秦淮区人民政府,found,seed_verified,南京市秦淮区人民政府 网站
+2026-04-18 12:25:27,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_秦淮区_GOV,秦淮区,district_notice,manifest_upsert,,https://www.njqh.gov.cn/qhqrmzf/202507/t20250711_5605267.html,南京市秦淮区人民政府,found,upsert_manifest,南京市秦淮区人民政府 网站
+2026-04-18 12:25:27,南京,NJ_REG_ENTRY_2023,,建邺区,district_followdown,search,"site:mp.weixin.qq.com ""建邺区0-3岁备案托育机构公示"" ""建邺区"" 南京",,,started,,健康建邺微信号
+2026-04-18 12:25:32,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_建邺区_WX,建邺区,district_wechat_notice,manifest_upsert,建邺区0-3岁备案托育机构公示,,,unresolved,seed_manual_capture,健康建邺微信号
+2026-04-18 12:25:32,南京,NJ_REG_ENTRY_2023,,鼓楼区,district_followdown,search,"site:gov.cn ""鼓楼区备案托育机构公示"" ""鼓楼区"" 南京",,,started,,南京市鼓楼区人民政府 网站
+2026-04-18 12:25:37,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_鼓楼区_GOV,鼓楼区,district_notice,manifest_upsert,鼓楼区备案托育机构公示,,,unresolved,seed_manual_capture,南京市鼓楼区人民政府 网站
+2026-04-18 12:25:37,南京,NJ_REG_ENTRY_2023,,栖霞区,district_followdown,search,"site:gov.cn ""栖霞区已登记备案托育机构公示"" ""栖霞区"" 南京",,,started,,南京市栖霞区人民政府网站
+2026-04-18 12:25:50,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_栖霞区_GOV,栖霞区,district_notice,manifest_upsert,栖霞区已登记备案托育机构公示,,,unresolved,seed_manual_capture,南京市栖霞区人民政府网站
+2026-04-18 12:25:50,南京,NJ_REG_ENTRY_2023,,雨花台区,district_followdown,search,"site:gov.cn ""南京市雨花台区备案托育机构公示"" ""雨花台区"" 南京",,,started,,南京市雨花台区人民政府网站
+2026-04-18 12:25:57,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_雨花台区_GOV,雨花台区,district_notice,manifest_upsert,南京市雨花台区备案托育机构公示,,,unresolved,seed_manual_capture,南京市雨花台区人民政府网站
+2026-04-18 12:25:57,南京,NJ_REG_ENTRY_2023,,江宁区,district_followdown,seed_verify,江宁区已审批备案托育机构公示,https://www.jiangning.gov.cn/jnqrmzf/202405/t20240515_4666588.html,江宁区人民政府,found,seed_verified,南京市江宁区人民政府网站
+2026-04-18 12:25:57,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_江宁区_GOV,江宁区,district_notice,manifest_upsert,,https://www.jiangning.gov.cn/jnqrmzf/202405/t20240515_4666588.html,江宁区人民政府,found,upsert_manifest,南京市江宁区人民政府网站
+2026-04-18 12:25:57,南京,NJ_REG_ENTRY_2023,,浦口区,district_followdown,seed_verify,南京市浦口区备案托育机构公示,https://www.pukou.gov.cn/pkqrmzf/202309/t20230915_4012368.html,,candidate,seed_kept_as_candidate,<urlopen error [WinError 10054] 远程主机强迫关闭了一个现有的连接。>
+2026-04-18 12:25:57,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_浦口区_GOV,浦口区,district_notice,manifest_upsert,,https://www.pukou.gov.cn/pkqrmzf/202309/t20230915_4012368.html,南京市浦口区备案托育机构公示,found,upsert_manifest,南京市浦口区人民政府网站
+2026-04-18 12:25:57,南京,NJ_REG_ENTRY_2023,,六合区,district_followdown,search,"site:mp.weixin.qq.com ""六合区备案托育机构名单公示"" ""六合区"" 南京",,,started,,健康六合订阅号
+2026-04-18 12:26:01,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_六合区_WX,六合区,district_wechat_notice,manifest_upsert,六合区备案托育机构名单公示,,,unresolved,seed_manual_capture,健康六合订阅号
+2026-04-18 12:26:01,南京,NJ_REG_ENTRY_2023,,溧水区,district_followdown,search,"site:gov.cn ""溧水区已备案托育机构名单公示"" ""溧水区"" 南京",,,started,,南京市溧水区人民政府 网站
+2026-04-18 12:26:04,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_溧水区_GOV,溧水区,district_notice,manifest_upsert,溧水区已备案托育机构名单公示,,,unresolved,seed_manual_capture,南京市溧水区人民政府 网站
+2026-04-18 12:26:04,南京,NJ_REG_ENTRY_2023,,高淳区,district_followdown,search,"site:mp.weixin.qq.com ""高淳区0-3岁托育机构备案托育机构名单公示"" ""高淳区"" 南京",,,started,,健康高淳微信号
+2026-04-18 12:26:08,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_高淳区_WX,高淳区,district_wechat_notice,manifest_upsert,高淳区0-3岁托育机构备案托育机构名单公示,,,unresolved,seed_manual_capture,健康高淳微信号
+2026-04-18 12:26:08,南京,NJ_REG_ENTRY_2023,,江北新区,district_followdown,search,"site:mp.weixin.qq.com ""江北新区备案托育机构名单公示"" ""江北新区"" 南京",,,started,,南京江北新区微信号
+2026-04-18 12:26:14,南京,NJ_REG_ENTRY_2023,NJ_REG_ENTRY_2023_江北新区_WX,江北新区,district_wechat_notice,manifest_upsert,江北新区备案托育机构名单公示,,,unresolved,seed_manual_capture,南京江北新区微信号
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2024,SZ_REG_MAP_2024,,citywide_platform_news,news_probe,,https://www.suzhou.gov.cn/szsrmzf/szyw/202406/43d1eaf4085a435582b8deb958eef36e.shtml,苏州市托育服务宣传月启动 “苏州托育地图”上线 - 苏州市人民政府,scanned,inspect_links,matched_links=1
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2024,SZ_REG_MAP_2024,,citywide_platform_news,news_probe,,https://www.suzhou.gov.cn/szsrmzf/szyw/202406/43d1eaf4085a435582b8deb958eef36e.shtml,,hint_detected,seed_h5_targets,官方新闻页确认 H5/公众号/APP 入口存在。
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2025_NEWS,SZ_REG_MAP_2025_NEWS,,citywide_platform_news,news_probe,,https://www.suzhou.gov.cn/szsrmzf/dstx/202506/263d7f3eec0b4fdfb6b1134406deeec1.shtml,苏州托育地图2.0版上线 - 苏州市人民政府,scanned,inspect_links,matched_links=1
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2025_NEWS,SZ_REG_MAP_2025_NEWS,,citywide_platform_news,news_probe,,https://www.suzhou.gov.cn/szsrmzf/dstx/202506/263d7f3eec0b4fdfb6b1134406deeec1.shtml,,hint_detected,seed_h5_targets,官方新闻页确认 H5/公众号/APP 入口存在。
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2025_WJW,SZ_REG_MAP_2025_WJW,,citywide_platform_news,news_probe,,https://wsjkw.suzhou.gov.cn/szswjw/bdxw/202506/9226398f983640d391b4f7e4f339488e.shtml,苏州托育地图2.0版，正式上线！ - 要闻动态 - 苏州市卫生健康委员会,scanned,inspect_links,matched_links=1
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2025_WJW,SZ_REG_MAP_2025_WJW,,citywide_platform_news,news_probe,,https://wsjkw.suzhou.gov.cn/szswjw/bdxw/202506/9226398f983640d391b4f7e4f339488e.shtml,,hint_detected,seed_h5_targets,官方新闻页确认 H5/公众号/APP 入口存在。
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2024,SZ_REG_H5_HEALTH_SUZHOU,,platform_h5_probe,seed,健康苏州掌上行 > 苏州托育地图,,,seeded,upsert_manifest,优先导出公开 H5 HAR 或 HTML 快照，不直接补机构字段。
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2024,SZ_REG_H5_SUZHOUDAO,,platform_h5_probe,seed,苏周到 > 苏州托育地图,,,seeded,upsert_manifest,优先记录最终公开 H5 URL 或导出 HAR。
+2026-04-18 12:41:39,苏州,SZ_REG_MAP_2024,SZ_REG_WECHAT_SUZHOU_HEALTH,,wechat_h5_probe,seed,苏州健康公众号 > 苏州托育地图,,,seeded,upsert_manifest,优先导出公开 H5 HAR 或保存 HTML 快照。

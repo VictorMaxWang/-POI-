@@ -17,6 +17,7 @@ from pipeline_schema import (
     FETCH_LOG_FIELDS,
     MANUAL_CAPTURE_FIELDS,
     MANUAL_REVIEW_FIELDS,
+    REGISTRY_PROBE_RESULT_FIELDS,
     SOURCE_MANIFEST_FIELDS,
     TABLE_SCHEMAS,
     TEXT_TAG_RULES,
@@ -107,6 +108,7 @@ def schema_fieldnames(filename: str) -> list[str]:
 
 def ensure_standard_files() -> None:
     ensure_csv(LOGS_DIR / "fetch_log.csv", FETCH_LOG_FIELDS)
+    ensure_csv(LOGS_DIR / "registry_probe_results.csv", REGISTRY_PROBE_RESULT_FIELDS)
     ensure_csv(LOGS_DIR / "manual_review_list.csv", MANUAL_REVIEW_FIELDS)
     ensure_csv(DOCS_DIR / "manual_capture_template.csv", MANUAL_CAPTURE_FIELDS)
 
@@ -117,9 +119,24 @@ def make_hash_id(prefix: str, *parts: object) -> str:
     return f"{prefix}_{digest}"
 
 
+def file_sha1(path: Path) -> str:
+    digest = hashlib.sha1()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def slugify(text_value: str) -> str:
     value = re.sub(r"[^\w.-]+", "_", text_value.strip(), flags=re.UNICODE)
     value = value.strip("._")
+    return value or "item"
+
+
+def safe_filename(text_value: str) -> str:
+    value = normalize_whitespace(text_value)
+    value = re.sub(r'[<>:"/\\|?*]+', "_", value)
+    value = value.strip(" .")
     return value or "item"
 
 
@@ -298,9 +315,104 @@ def guess_extension(content_type: str, url: str) -> str:
 
 def save_response(content: bytes, target_dir: Path, source_id: str, extension: str) -> Path:
     target_dir.mkdir(parents=True, exist_ok=True)
-    path = target_dir / f"{slugify(source_id)}{extension}"
+    path = target_dir / f"{safe_filename(source_id)}{extension}"
     path.write_bytes(content)
     return path
+
+
+def save_text(path: Path, content: str) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+    return path
+
+
+def upsert_manifest_rows(new_rows: Iterable[dict[str, object]]) -> None:
+    existing_rows = load_manifest()
+    merged = {row.get("source_id", ""): {field: row.get(field, "") for field in SOURCE_MANIFEST_FIELDS} for row in existing_rows}
+    for row in new_rows:
+        source_id = normalize_whitespace(stringify(row.get("source_id", "")))
+        if not source_id:
+            continue
+        base_row = merged.get(source_id, {field: "" for field in SOURCE_MANIFEST_FIELDS})
+        for field in SOURCE_MANIFEST_FIELDS:
+            if field == "source_id":
+                base_row[field] = source_id
+                continue
+            value = normalize_whitespace(stringify(row.get(field, "")))
+            if value:
+                base_row[field] = value
+        merged[source_id] = base_row
+
+    ordered_rows = sorted(
+        merged.values(),
+        key=lambda row: (
+            row.get("city", ""),
+            row.get("target_table", ""),
+            row.get("priority", "999"),
+            row.get("source_id", ""),
+        ),
+    )
+    write_csv_rows(DOCS_DIR / "source_manifest.csv", SOURCE_MANIFEST_FIELDS, ordered_rows)
+
+
+def log_registry_probe(
+    *,
+    city: str,
+    parent_source_id: str = "",
+    source_id: str = "",
+    district: str = "",
+    page_role: str = "",
+    probe_stage: str,
+    query_text: str = "",
+    candidate_url: str = "",
+    candidate_title: str = "",
+    status: str,
+    decision: str = "",
+    note: str = "",
+) -> None:
+    ensure_standard_files()
+    append_csv_rows(
+        LOGS_DIR / "registry_probe_results.csv",
+        REGISTRY_PROBE_RESULT_FIELDS,
+        [
+            {
+                "probe_time": now_ts(),
+                "city": city,
+                "parent_source_id": parent_source_id,
+                "source_id": source_id,
+                "district": district,
+                "page_role": page_role,
+                "probe_stage": probe_stage,
+                "query_text": query_text,
+                "candidate_url": candidate_url,
+                "candidate_title": candidate_title,
+                "status": status,
+                "decision": decision,
+                "note": note,
+            }
+        ],
+    )
+
+
+def render_registry_table_html(headers: list[str], rows: list[list[str]], title: str = "") -> str:
+    title_html = html.escape(title or "Registry Evidence")
+    table_header = "".join(f"<th>{html.escape(normalize_whitespace(cell))}</th>" for cell in headers)
+    table_rows = []
+    for row in rows:
+        cells = "".join(f"<td>{html.escape(normalize_whitespace(cell))}</td>" for cell in row)
+        table_rows.append(f"<tr>{cells}</tr>")
+    body_html = "\n".join(table_rows)
+    return (
+        "<!doctype html>\n"
+        "<html><head><meta charset=\"utf-8\">"
+        f"<title>{title_html}</title>"
+        "</head><body>"
+        f"<h1>{title_html}</h1>"
+        "<table border=\"1\">"
+        f"<thead><tr>{table_header}</tr></thead>"
+        f"<tbody>{body_html}</tbody>"
+        "</table></body></html>"
+    )
 
 
 def log_fetch(stage: str, source_row: dict[str, str], result: dict[str, object], local_path: Path | None, note: str = "") -> None:
@@ -386,8 +498,15 @@ def seed_manual_capture_row(
     *,
     district: str = "",
     source_page: str = "",
+    evidence_type: str = "",
     evidence_title: str = "",
+    evidence_url_final: str = "",
+    evidence_file_path: str = "",
+    capture_mode: str = "",
+    access_channel: str = "",
+    public_access_confirmed: str = "",
     capture_status: str = "TODO",
+    parser_hint: str = "",
 ) -> None:
     ensure_standard_files()
     existing = read_csv_rows(DOCS_DIR / "manual_capture_template.csv")
@@ -427,8 +546,15 @@ def seed_manual_capture_row(
                 "page_role": source_row.get("page_role", ""),
                 "parent_source_id": source_row.get("parent_source_id", ""),
                 "source_page": source_page or source_row.get("url_or_page_name", ""),
+                "evidence_type": evidence_type,
                 "evidence_title": evidence_title or source_row.get("source_name", ""),
-                "evidence_url_final": "",
+                "evidence_url_final": evidence_url_final,
+                "evidence_file_path": evidence_file_path,
+                "evidence_file_sha1": "",
+                "capture_mode": capture_mode,
+                "access_channel": access_channel,
+                "public_access_confirmed": public_access_confirmed,
+                "captured_at": "",
                 "institution_name_raw": "",
                 "address_raw": "",
                 "phone_raw": "",
@@ -438,7 +564,9 @@ def seed_manual_capture_row(
                 "inclusive_flag_raw": "",
                 "demo_flag_raw": "",
                 "capture_person": "",
-                "capture_date": "",
+                "import_status": "PENDING",
+                "parser_hint": parser_hint,
+                "derived_source_id": "",
                 "screenshot_path": "",
                 "remark": remark,
             }
@@ -447,6 +575,11 @@ def seed_manual_capture_row(
 
 
 def load_html_for_source(source_id: str, folder: Path) -> str:
+    exact_name = safe_filename(source_id)
+    for suffix in (".html", ".htm", ".txt"):
+        candidate = folder / f"{exact_name}{suffix}"
+        if candidate.exists():
+            return decode_bytes(candidate.read_bytes())
     for candidate in folder.glob(f"{slugify(source_id)}.*"):
         if candidate.suffix.lower() in {".html", ".htm", ".txt"}:
             return decode_bytes(candidate.read_bytes())
@@ -476,6 +609,13 @@ def extract_publish_date(html_text: str) -> str:
 
 def select_source_url(source_row: dict[str, str]) -> str:
     return source_row.get("url_or_page_name", "")
+
+
+def get_manifest_row(source_id: str) -> dict[str, str]:
+    for row in load_manifest():
+        if row.get("source_id") == source_id:
+            return row
+    return {}
 
 
 def iter_schema_rows() -> list[dict[str, str]]:

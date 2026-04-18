@@ -16,7 +16,7 @@
 
 1. 所有结构化 CSV 使用 `UTF-8-SIG`。
 2. 所有 `clean/` 与 `text/` 表保留 `source_id`、`source_url`、`manual_check_flag`。
-3. 抓取时优先官方页面；无法稳定自动抓取时，写 `logs/blockers.md`，并补 `docs/manual_capture_template.csv`。
+3. 抓取时优先官方页面；无法稳定自动抓取时，先补公开证据（URL / HTML / HAR / 附件 / 截图），再考虑最小人工兜底。
 4. 第一阶段不跑路径矩阵，不做复杂模型，不做情感分析。
 5. registry 阶段先解决真实机构名录接入，再决定是否进入 geocode / poi。
 
@@ -26,11 +26,19 @@
 python scripts/fetch_population_sources.py
 python scripts/parse_population_tables.py
 
-python scripts/fetch_registry_sources.py
-python scripts/parse_registry_tables.py
-python scripts/prepare_city_registry_tasks.py
+python scripts/probe_registry_sources.py --city 南京
+python scripts/fetch_registry_sources.py --city 南京
+python scripts/extract_official_attachments.py --city 南京
 
-# 人工补录过程中可反复执行
+python scripts/probe_registry_sources.py --city 苏州
+python scripts/fetch_registry_sources.py --city 苏州
+
+python scripts/prepare_city_registry_tasks.py
+python scripts/import_html_snapshots.py
+python scripts/import_har_registry.py
+python scripts/parse_registry_tables.py
+
+# 只有 L1-L5 全失败时才使用 legacy 手工机构行
 python scripts/merge_manual_capture.py
 python scripts/build_nursery_master.py
 python scripts/verify_registry_minimums.py
@@ -52,13 +60,16 @@ python scripts/generate_manual_review_list.py
 - 若官方站点证书链异常，抓取层会自动重试一次不校验证书，并把行为写入 `logs/fetch_log.csv`。
 - 若页面返回 WAF、验证码、App/JS 动态入口、需要登录等情况，脚本不会硬爬，会记录 blocker。
 - 高德相关脚本依赖环境变量 `AMAP_WEB_API_KEY` 或 `AMAP_KEY`。
-- `prepare_city_registry_tasks.py` 只负责把入口页线索拆成城市任务单。
-- `merge_manual_capture.py` 只把已补录完成的机构行写回 `clean/nursery_registry_raw.csv`。
+- `probe_registry_sources.py` 负责把入口页拆成区级来源、H5 probe 目标和证据任务。
+- `prepare_city_registry_tasks.py` 会把 `manual_capture_template.csv` 重写成“公开证据登记表”。
+- `extract_official_attachments.py` 会把 docx/xlsx/pdf/csv 等公开附件标准化为 parser-ready HTML。
+- `import_html_snapshots.py` / `import_har_registry.py` 只处理人工导出的公开 HTML / HAR，不会回放私有接口。
+- `merge_manual_capture.py` 默认只合并 `legacy_manual_row` 一类的 L6 兜底机构行。
 - `verify_registry_minimums.py` 是 registry 进入 geocode/poi 前的硬门槛。
 
 ## 当前已知难点
 
-- 南京 registry 仍以区级公示页、`我的南京` 和 `金陵托育` 人工补录为主。
-- 苏州托育地图是官方确认覆盖备案机构的 App 场景，第一阶段默认走人工导出/人工补录。
+- 南京 registry 已切到“区级公示页 + 附件解析”主线，微信类区县仍保留为 HAR/HTML 证据导入残差。
+- 苏州托育地图已切到“H5/XHR probe + HAR/HTML 导入”主线，不再默认逐机构手抄。
 - 南通托育在线虽然公开 SSR 页面可解析，但详情页和部分字段仍需人工复核。
 - 盐城已接入首条可直解析官方名录，可作为空表转实表的起点。

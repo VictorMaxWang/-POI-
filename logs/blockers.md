@@ -22,6 +22,33 @@
 - next_action: 该来源是 App/H5/人工浏览器补录流程；入口页已落盘后，请继续人工逐机构补录明细。
 - resolved_flag: 0
 
+### 2026-04-18 12:42:06 | registry_fetch | SZ_REG_H5_HEALTH_SUZHOU
+- source_id: SZ_REG_H5_HEALTH_SUZHOU
+- page_role: platform_h5_probe
+- url: 健康苏州掌上行 App > 苏州托育地图
+- reason: access_method=manual_app_capture
+- last_seen: 2026-04-18 12:42:06
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:42:06 | registry_fetch | SZ_REG_H5_SUZHOUDAO
+- source_id: SZ_REG_H5_SUZHOUDAO
+- page_role: platform_h5_probe
+- url: 苏周到 App > 苏州托育地图
+- reason: access_method=manual_app_capture
+- last_seen: 2026-04-18 12:42:06
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:42:06 | registry_fetch | SZ_REG_WECHAT_SUZHOU_HEALTH
+- source_id: SZ_REG_WECHAT_SUZHOU_HEALTH
+- page_role: wechat_h5_probe
+- url: 苏州健康公众号 > 苏州托育地图
+- reason: access_method=manual_wechat_capture
+- last_seen: 2026-04-18 12:42:06
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
 ## 南通
 
 ### 2026-04-18 10:33:12 | registry_fetch | NT_REG_PORTAL_2023
@@ -87,6 +114,123 @@
 - reason: access_method=manual_wechat_capture
 - last_seen: 2026-04-18 11:26:36
 - next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:25 | registry_fetch | NJ_REG_APP_MYNJ
+- source_id: NJ_REG_APP_MYNJ
+- page_role: app_registry
+- url: 我的南京 App > 托育服务 > 备案机构
+- reason: access_method=manual_app_capture
+- last_seen: 2026-04-18 12:28:25
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:26 | registry_fetch | NJ_REG_ENTRY_2023_栖霞区_GOV
+- source_id: NJ_REG_ENTRY_2023_栖霞区_GOV
+- page_role: district_notice
+- url: 栖霞区 -> 栖霞区已登记备案托育机构公示
+- reason: access_method=manual_browser_capture
+- last_seen: 2026-04-18 12:28:26
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:26 | registry_fetch | NJ_REG_ENTRY_2023_浦口区_GOV
+- source_id: NJ_REG_ENTRY_2023_浦口区_GOV
+- page_role: district_notice
+- url: https://www.pukou.gov.cn/pkqrmzf/202309/t20230915_4012368.html
+- reason: <urlopen error [WinError 10054] 远程主机强迫关闭了一个现有的连接。>
+- last_seen: 2026-04-18 12:28:26
+- next_action: 保留阻塞截图并人工补录；如页面结构不稳定，直接转人工流程。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:26 | registry_fetch | NJ_REG_ENTRY_2023_溧水区_GOV
+- source_id: NJ_REG_ENTRY_2023_溧水区_GOV
+- page_role: district_notice
+- url: 溧水区 -> 溧水区已备案托育机构名单公示
+- reason: access_method=manual_browser_capture
+- last_seen: 2026-04-18 12:28:26
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:26 | registry_fetch | NJ_REG_ENTRY_2023_玄武区_GOV
+- source_id: NJ_REG_ENTRY_2023_玄武区_GOV
+- page_role: district_notice
+- url: 玄武区 -> 玄武区已审批备案托育机构公示
+- reason: access_method=manual_browser_capture
+- last_seen: 2026-04-18 12:28:26
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:27 | registry_fetch | NJ_REG_ENTRY_2023_雨花台区_GOV
+- source_id: NJ_REG_ENTRY_2023_雨花台区_GOV
+- page_role: district_notice
+- url: 雨花台区 -> 南京市雨花台区备案托育机构公示
+- reason: access_method=manual_browser_capture
+- last_seen: 2026-04-18 12:28:27
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:27 | registry_fetch | NJ_REG_ENTRY_2023_鼓楼区_GOV
+- source_id: NJ_REG_ENTRY_2023_鼓楼区_GOV
+- page_role: district_notice
+- url: 鼓楼区 -> 鼓楼区备案托育机构公示
+- reason: access_method=manual_browser_capture
+- last_seen: 2026-04-18 12:28:27
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:27 | registry_fetch | NJ_REG_WECHAT_JLTY
+- source_id: NJ_REG_WECHAT_JLTY
+- page_role: wechat_registry
+- url: 金陵托育公众号 > 备案机构名单
+- reason: access_method=manual_wechat_capture
+- last_seen: 2026-04-18 12:28:27
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:27 | registry_fetch | NJ_REG_ENTRY_2023_六合区_WX
+- source_id: NJ_REG_ENTRY_2023_六合区_WX
+- page_role: district_wechat_notice
+- url: 六合区 -> 六合区备案托育机构名单公示
+- reason: access_method=manual_wechat_capture
+- last_seen: 2026-04-18 12:28:27
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:27 | registry_fetch | NJ_REG_ENTRY_2023_建邺区_WX
+- source_id: NJ_REG_ENTRY_2023_建邺区_WX
+- page_role: district_wechat_notice
+- url: 建邺区 -> 建邺区0-3岁备案托育机构公示
+- reason: access_method=manual_wechat_capture
+- last_seen: 2026-04-18 12:28:27
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:27 | registry_fetch | NJ_REG_ENTRY_2023_江北新区_WX
+- source_id: NJ_REG_ENTRY_2023_江北新区_WX
+- page_role: district_wechat_notice
+- url: 江北新区 -> 江北新区备案托育机构名单公示
+- reason: access_method=manual_wechat_capture
+- last_seen: 2026-04-18 12:28:27
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:27 | registry_fetch | NJ_REG_ENTRY_2023_高淳区_WX
+- source_id: NJ_REG_ENTRY_2023_高淳区_WX
+- page_role: district_wechat_notice
+- url: 高淳区 -> 高淳区0-3岁托育机构备案托育机构名单公示
+- reason: access_method=manual_wechat_capture
+- last_seen: 2026-04-18 12:28:27
+- next_action: 该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。
+- resolved_flag: 0
+
+### 2026-04-18 12:28:28 | registry_fetch | NJ_REG_PUHUI_2025B2
+- source_id: NJ_REG_PUHUI_2025B2
+- page_role: incremental_notice
+- url: https://wjw.nanjing.gov.cn/njswshjhsywyh/202511/t20251111_5686527.html
+- reason: http_404
+- last_seen: 2026-04-18 12:28:28
+- next_action: 核对页面是否失效或迁移；保留当前入口页截图，并在同站点人工搜索新链接后补录。
 - resolved_flag: 0
 
 ## 盐城

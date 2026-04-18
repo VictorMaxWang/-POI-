@@ -44,6 +44,32 @@ def build_referer(url: str) -> str:
     return f"{parsed.scheme}://{parsed.netloc}/" if parsed.scheme and parsed.netloc else ""
 
 
+def manual_capture_defaults(access_method: str) -> dict[str, str]:
+    if access_method == "manual_wechat_capture":
+        return {
+            "evidence_type": "har",
+            "capture_mode": "browser_export",
+            "access_channel": "wechat_h5",
+            "public_access_confirmed": "1",
+            "parser_hint": "wechat_public_capture",
+        }
+    if access_method == "manual_app_capture":
+        return {
+            "evidence_type": "har",
+            "capture_mode": "browser_export",
+            "access_channel": "app_webview",
+            "public_access_confirmed": "1",
+            "parser_hint": "public_h5_probe",
+        }
+    return {
+        "evidence_type": "html_snapshot",
+        "capture_mode": "browser_export",
+        "access_channel": "official_site",
+        "public_access_confirmed": "1",
+        "parser_hint": "official_notice_probe",
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch registry entry pages and official list pages.")
     parser.add_argument("--city", nargs="*", default=[], help="Limit to one or more cities")
@@ -67,7 +93,7 @@ def main() -> None:
                     f"access_method={access_method}",
                     "该来源以 App、公众号或人工浏览器补录为主；保留入口名称和截图后，逐机构补录真实名单。",
                 )
-                seed_manual_capture_row(row, f"manual_source:{access_method}")
+                seed_manual_capture_row(row, f"manual_source:{access_method}", **manual_capture_defaults(access_method))
                 log_fetch(
                     "registry_fetch",
                     row,
@@ -126,7 +152,15 @@ def main() -> None:
             else:
                 manual_action = "保留阻塞截图并人工补录；如页面结构不稳定，直接转人工流程。"
             append_blocker("registry_fetch", row, blocker_reason, manual_action)
-            seed_manual_capture_row(row, f"fetch_blocked:{blocker_reason}")
+            seed_manual_capture_row(
+                row,
+                f"fetch_blocked:{blocker_reason}",
+                evidence_type="screenshot",
+                capture_mode="manual_note",
+                access_channel="official_site",
+                public_access_confirmed="1",
+                parser_hint="blocked_capture_record",
+            )
             note = f"blocker:{blocker_reason}"
         elif access_method in MANUAL_ACCESS_METHODS:
             blocked += 1
@@ -136,7 +170,7 @@ def main() -> None:
                 f"access_method={access_method}",
                 "该来源是 App/H5/人工浏览器补录流程；入口页已落盘后，请继续人工逐机构补录明细。",
             )
-            seed_manual_capture_row(row, f"manual_capture_required:{access_method}")
+            seed_manual_capture_row(row, f"manual_capture_required:{access_method}", **manual_capture_defaults(access_method))
             note = f"manual_hint:{access_method}"
         elif row.get("source_type") == "registry_entry" and html_text:
             links = extract_links(html_text, url)
@@ -148,7 +182,15 @@ def main() -> None:
                     "entry_page_without_links",
                     "入口页未识别到稳定二级链接；请人工打开页面并补录区级公示页任务。",
                 )
-                seed_manual_capture_row(row, "entry_page_without_links")
+                seed_manual_capture_row(
+                    row,
+                    "entry_page_without_links",
+                    evidence_type="url_record",
+                    capture_mode="url_record",
+                    access_channel="official_site",
+                    public_access_confirmed="1",
+                    parser_hint="entry_page_followdown",
+                )
                 note = "entry_links_detected:0"
             else:
                 note = f"entry_links_detected:{len(links)}"
