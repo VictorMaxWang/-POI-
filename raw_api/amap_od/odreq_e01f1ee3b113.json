@@ -1,0 +1,56 @@
+{
+  "status": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "count": "8",
+  "results": [
+    {
+      "origin_id": "1",
+      "dest_id": "1",
+      "distance": "1890",
+      "duration": "0"
+    },
+    {
+      "origin_id": "2",
+      "dest_id": "1",
+      "distance": "32514",
+      "duration": "0"
+    },
+    {
+      "origin_id": "3",
+      "dest_id": "1",
+      "distance": "35006",
+      "duration": "0"
+    },
+    {
+      "origin_id": "4",
+      "dest_id": "1",
+      "distance": "36580",
+      "duration": "0"
+    },
+    {
+      "origin_id": "5",
+      "dest_id": "1",
+      "distance": "37560",
+      "duration": "0"
+    },
+    {
+      "origin_id": "6",
+      "dest_id": "1",
+      "distance": "38529",
+      "duration": "0"
+    },
+    {
+      "origin_id": "7",
+      "dest_id": "1",
+      "distance": "38901",
+      "duration": "0"
+    },
+    {
+      "origin_id": "8",
+      "dest_id": "1",
+      "distance": "56781",
+      "duration": "0"
+    }
+  ]
+}

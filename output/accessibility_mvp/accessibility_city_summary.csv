@@ -1,1 +1,5 @@
 ﻿city,demand_points,matched_points,median_nearest_time,p25_nearest_time,p75_nearest_time,mean_nearest_time,coverage_15m
+南京,2977,2977,52.44,18.68,186.46,143.73,21.63
+南通,2104,2104,210.09,65.24,309.98,207.87,5.70
+盐城,2412,2412,42.45,22.25,74.83,70.32,11.77
+苏州,3077,3077,840.02,701.05,940.91,775.38,1.14

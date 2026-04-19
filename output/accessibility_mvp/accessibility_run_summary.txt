@@ -1,6 +1,11 @@
 Accessibility MVP run summary
 input=output/accessibility_mvp/od_matrix_walk_15m.csv
 threshold_min=15
-point_rows=0
-city_rows=0
+walk_time_proxy=network_distance_div_80m_per_min_when_duration_is_zero
+point_rows=10570
+city_rows=4
 
+南京: demand=2977 matched=2977 median=52.44 coverage_15m=21.63%
+南通: demand=2104 matched=2104 median=210.09 coverage_15m=5.70%
+盐城: demand=2412 matched=2412 median=42.45 coverage_15m=11.77%
+苏州: demand=3077 matched=3077 median=840.02 coverage_15m=1.14%

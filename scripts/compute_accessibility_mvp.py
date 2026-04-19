@@ -9,6 +9,7 @@ from fetch_od_matrix import OD_FIELDS
 
 
 OUTPUT_DIR = PROJECT_ROOT / "output" / "accessibility_mvp"
+WALK_METERS_PER_MIN = 80.0
 
 POINT_FIELDS = [
     "city",
@@ -59,6 +60,20 @@ def format_number(value: float) -> str:
     return f"{value:.2f}"
 
 
+def effective_walk_time_min(row: dict[str, str]) -> float | None:
+    raw_time = row.get("walk_time_min", "")
+    if raw_time not in {"", None}:
+        time_value = float(raw_time)
+        if time_value > 0:
+            return time_value
+    raw_distance = row.get("walk_distance_m", "")
+    if raw_distance not in {"", None}:
+        distance_value = float(raw_distance)
+        if distance_value > 0:
+            return distance_value / WALK_METERS_PER_MIN
+    return None
+
+
 def compute_2sfca(point_rows: list[dict[str, str]], threshold: float) -> dict[str, float]:
     covered_by_supply: dict[str, list[str]] = {}
     for row in point_rows:
@@ -98,8 +113,14 @@ def main() -> None:
 
     point_rows: list[dict[str, str]] = []
     for demand_id, rows in grouped.items():
-        ok_rows = [row for row in rows if row.get("od_status") == "OK" and row.get("walk_time_min", "")]
-        best_row = min(ok_rows, key=lambda row: float(row["walk_time_min"])) if ok_rows else None
+        ok_rows = []
+        for row in rows:
+            effective_time = effective_walk_time_min(row)
+            if row.get("od_status") == "OK" and effective_time is not None:
+                ok_rows.append((row, effective_time))
+        best_pair = min(ok_rows, key=lambda item: item[1]) if ok_rows else None
+        best_row = best_pair[0] if best_pair else None
+        best_time = best_pair[1] if best_pair else None
         point_row = {
             "city": rows[0].get("city", ""),
             "district": rows[0].get("demand_district", ""),
@@ -108,10 +129,10 @@ def main() -> None:
             "demand_name": rows[0].get("demand_name", ""),
             "nearest_nursery_id": best_row.get("nursery_id", "") if best_row else "",
             "nearest_nursery_name": best_row.get("nursery_name", "") if best_row else "",
-            "nearest_walk_time_min": best_row.get("walk_time_min", "") if best_row else "",
+            "nearest_walk_time_min": format_number(best_time) if best_time is not None else "",
             "covered_15m": (
                 "1"
-                if best_row and float(best_row["walk_time_min"]) <= args.threshold
+                if best_time is not None and best_time <= args.threshold
                 else "0"
             ),
         }
@@ -153,6 +174,7 @@ def main() -> None:
         "Accessibility MVP run summary",
         f"input={args.input}",
         f"threshold_min={args.threshold:.0f}",
+        f"walk_time_proxy=network_distance_div_{int(WALK_METERS_PER_MIN)}m_per_min_when_duration_is_zero",
         f"point_rows={len(point_rows)}",
         f"city_rows={len(city_rows)}",
         "",

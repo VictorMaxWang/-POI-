@@ -5,11 +5,22 @@ import csv
 import json
 import math
 import os
+import ssl
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from pipeline_common import CLEAN_DIR, PROJECT_ROOT, make_hash_id, now_ts, read_csv_rows, write_csv_rows
+from pipeline_common import (
+    CLEAN_DIR,
+    PROJECT_ROOT,
+    append_csv_rows,
+    make_hash_id,
+    now_ts,
+    read_csv_rows,
+    write_csv_rows,
+)
 
 
 OUTPUT_DIR = PROJECT_ROOT / "output" / "accessibility_mvp"
@@ -114,9 +125,34 @@ def fetch_json(url: str, timeout: int = 30) -> tuple[dict[str, object], bool]:
             )
         },
     )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    return payload if isinstance(payload, dict) else {}, True
+    default_context = ssl.create_default_context()
+    insecure_context = ssl.create_default_context()
+    insecure_context.check_hostname = False
+    insecure_context.verify_mode = ssl.CERT_NONE
+
+    try:
+        with urllib.request.urlopen(request, timeout=timeout, context=default_context) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        return payload if isinstance(payload, dict) else {}, True
+    except urllib.error.URLError:
+        try:
+            with urllib.request.urlopen(request, timeout=timeout, context=insecure_context) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+            return payload if isinstance(payload, dict) else {}, True
+        except Exception as exc:
+            return {
+                "status": "0",
+                "infocode": "NETWORK_ERROR",
+                "info": str(exc),
+                "results": [],
+            }, False
+    except Exception as exc:
+        return {
+            "status": "0",
+            "infocode": "NETWORK_ERROR",
+            "info": str(exc),
+            "results": [],
+        }, False
 
 
 def build_supply_tables() -> tuple[list[dict[str, str]], list[dict[str, str]]]:
@@ -246,8 +282,8 @@ def build_distance_url(
 ) -> str:
     params = {
         "key": api_key,
-        "origins": f"{origin_lng},{origin_lat}",
-        "destination": "|".join(f"{row['dest_lng']},{row['dest_lat']}" for row in candidates),
+        "origins": "|".join(f"{row['dest_lng']},{row['dest_lat']}" for row in candidates),
+        "destination": f"{origin_lng},{origin_lat}",
         "type": "0",
     }
     endpoint = "https://restapi.amap.com/v3/distance"
@@ -262,6 +298,19 @@ def write_raw_response(request_id: str, payload: dict[str, object]) -> None:
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+
+
+def fetch_od_with_retry(request_url: str, timeout: int = 30) -> tuple[dict[str, object], bool]:
+    backoffs = [0.5, 1.0, 2.0]
+    payload: dict[str, object] = {}
+    http_ok = False
+    for attempt_index in range(len(backoffs) + 1):
+        payload, http_ok = fetch_json(request_url, timeout=timeout)
+        if str(payload.get("infocode", "")) != "10021":
+            return payload, http_ok
+        if attempt_index < len(backoffs):
+            time.sleep(backoffs[attempt_index])
+    return payload, http_ok
 
 
 def main() -> None:
@@ -279,18 +328,36 @@ def main() -> None:
     api_key = get_api_key(args.api_key)
     demand_points = load_demand_points()
     supply_by_city = group_by_city(usable_supply, "city")
+    od_path = OUTPUT_DIR / "od_matrix_walk_15m.csv"
+    request_log_path = OUTPUT_DIR / "od_request_log.csv"
 
     if not api_key:
-        write_csv_rows(OUTPUT_DIR / "od_matrix_walk_15m.csv", OD_FIELDS, [])
-        write_csv_rows(OUTPUT_DIR / "od_request_log.csv", REQUEST_LOG_FIELDS, [])
+        write_csv_rows(od_path, OD_FIELDS, [])
+        write_csv_rows(request_log_path, REQUEST_LOG_FIELDS, [])
         print(
             "od fetch blocked: missing_api_key "
             f"usable_supply={len(usable_supply)} excluded_supply={len(excluded_supply)} demand_points={len(demand_points)}"
         )
         return
 
-    od_rows: list[dict[str, str]] = []
-    request_logs: list[dict[str, str]] = []
+    existing_logs = read_csv_rows(request_log_path)
+    successful_demand_ids = {
+        row.get("demand_poi_row_id", "")
+        for row in existing_logs
+        if row.get("demand_poi_row_id", "")
+        and row.get("api_status", "") == "1"
+        and row.get("success_count", "") not in {"", "0"}
+    }
+    if existing_logs:
+        demand_points = [
+            row for row in demand_points if row["demand_poi_row_id"] not in successful_demand_ids
+        ]
+    else:
+        write_csv_rows(od_path, OD_FIELDS, [])
+        write_csv_rows(request_log_path, REQUEST_LOG_FIELDS, [])
+
+    od_row_count = 0
+    request_count = len(existing_logs)
 
     for demand_row in demand_points:
         city_supply = supply_by_city.get(demand_row["city"], [])
@@ -312,12 +379,13 @@ def main() -> None:
             demand_row["origin_lat"],
             candidates,
         )
-        payload, http_ok = fetch_json(request_url, timeout=30)
+        payload, http_ok = fetch_od_with_retry(request_url, timeout=30)
         write_raw_response(request_id, payload)
 
         results = payload.get("results", []) if isinstance(payload.get("results"), list) else []
         success_count = 0
         failure_count = 0
+        od_rows_for_request: list[dict[str, str]] = []
 
         for index, candidate in enumerate(candidates):
             result_row = results[index] if index < len(results) and isinstance(results[index], dict) else {}
@@ -331,7 +399,7 @@ def main() -> None:
                 walk_time_min = ""
                 od_status = "NO_ROUTE"
                 failure_count += 1
-            od_rows.append(
+            od_rows_for_request.append(
                 {
                     "od_row_id": make_hash_id(
                         "od",
@@ -362,32 +430,37 @@ def main() -> None:
                 }
             )
 
-        request_logs.append(
-            {
-                "request_id": request_id,
-                "request_time": now_ts(),
-                "city": demand_row["city"],
-                "demand_poi_row_id": demand_row["demand_poi_row_id"],
-                "demand_poi_id": demand_row["demand_poi_id"],
-                "demand_name": demand_row["demand_name"],
-                "candidate_count": str(len(candidates)),
-                "travel_mode": args.mode,
-                "request_url": request_url,
-                "api_status": str(payload.get("status", "")),
-                "infocode": str(payload.get("infocode", "")),
-                "result_count": str(len(results)),
-                "success_count": str(success_count),
-                "failure_count": str(failure_count),
-                "http_ok": "1" if http_ok else "0",
-            }
+        append_csv_rows(od_path, OD_FIELDS, od_rows_for_request)
+        append_csv_rows(
+            request_log_path,
+            REQUEST_LOG_FIELDS,
+            [
+                {
+                    "request_id": request_id,
+                    "request_time": now_ts(),
+                    "city": demand_row["city"],
+                    "demand_poi_row_id": demand_row["demand_poi_row_id"],
+                    "demand_poi_id": demand_row["demand_poi_id"],
+                    "demand_name": demand_row["demand_name"],
+                    "candidate_count": str(len(candidates)),
+                    "travel_mode": args.mode,
+                    "request_url": request_url,
+                    "api_status": str(payload.get("status", "")),
+                    "infocode": str(payload.get("infocode", "")),
+                    "result_count": str(len(results)),
+                    "success_count": str(success_count),
+                    "failure_count": str(failure_count),
+                    "http_ok": "1" if http_ok else "0",
+                }
+            ],
         )
+        od_row_count += len(od_rows_for_request)
+        request_count += 1
 
-    write_csv_rows(OUTPUT_DIR / "od_matrix_walk_15m.csv", OD_FIELDS, od_rows)
-    write_csv_rows(OUTPUT_DIR / "od_request_log.csv", REQUEST_LOG_FIELDS, request_logs)
     print(
         "od fetch complete: "
         f"demand_points={len(demand_points)} usable_supply={len(usable_supply)} "
-        f"excluded_supply={len(excluded_supply)} requests={len(request_logs)} od_rows={len(od_rows)}"
+        f"excluded_supply={len(excluded_supply)} requests={request_count} od_rows={od_row_count}"
     )
 
 
