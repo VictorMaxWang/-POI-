@@ -1,0 +1,52 @@
+Suzhou supply completeness audit
+city=苏州
+walk_time_proxy=network_distance_div_80m_per_min
+supply_total=10
+supply_usable=9
+supply_excluded=1
+demand_raw_rows=3113
+demand_unique_points=3077
+demand_district_count=11
+point_rows=3077
+covered_15m=35
+snapshot_exists=1
+snapshot_row_count=10
+snapshot_has_pagination_text=0
+blocker_occurrences_SZ_REG_MAP_2024=4
+
+source_distribution:
+- SZ_REG_MAP_2024_JSON_9F1DD629: 10
+
+usable_supply_district_distribution:
+- 张家港市: 9
+
+top_nearest_nursery_distribution:
+- 张家港市闸上幼儿园: 3024
+- 张家港市阳光绿城幼儿园有限公司: 10
+- 张家港市金香幼儿园: 10
+- 张家港市金港中心幼儿园: 10
+- 张家港市后塍幼儿园: 10
+- 张家港市苏州外国语学校附属幼儿园有限公司: 9
+- 张家港市苏阳托育中心有限公司: 2
+- 张家港市南沙幼儿园: 1
+- 张家港市新塍幼儿园: 1
+
+district_level_summary:
+- (blank): n=299 median=843.46 p25=785.07 p75=926.94 coverage_15m=1.00 top_nearest=张家港市闸上幼儿园 (294)
+- 吴中区: n=258 median=901.33 p25=878.11 p75=917.53 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (258)
+- 吴江区: n=277 median=1083.34 p25=1041.31 p75=1275.09 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (277)
+- 太仓市: n=300 median=968.36 p25=935.21 p75=995.94 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (300)
+- 姑苏区: n=300 median=837.87 p25=804.12 p75=882.08 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (300)
+- 工业园区: n=265 median=868.11 p25=809.27 p75=922.83 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (265)
+- 常熟市: n=263 median=495.15 p25=454.87 p75=555.11 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (263)
+- 张家港市: n=300 median=102.88 p25=74.22 p75=127.24 coverage_15m=10.67 top_nearest=张家港市闸上幼儿园 (252)
+- 昆山市: n=279 median=914.73 p25=883.30 p75=953.55 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (279)
+- 相城区: n=258 median=714.43 p25=650.37 p75=749.62 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (258)
+- 高新区、虎丘区: n=278 median=803.51 p25=762.74 p75=836.81 coverage_15m=0.00 top_nearest=张家港市闸上幼儿园 (278)
+
+risk_flags:
+source_singleton_risk=1 ratio=100.00
+spatial_concentration_risk=1 ratio=100.00
+nearest_domination_risk=1 ratio=98.28
+valid_for_citywide_result=0
+judgement=source_incomplete_and_spatially_concentrated
